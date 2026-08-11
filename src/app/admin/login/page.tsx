@@ -4,14 +4,9 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Shield, Loader2, AlertCircle } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import Link from "next/link";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { adminLoginSchema, type AdminLoginInput } from "@/lib/validation";
-
 import { Suspense } from "react";
 
 // ============================================================
@@ -60,103 +55,81 @@ function AdminLoginForm() {
   };
 
   return (
-    <main className="min-h-screen bg-canvas flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md mx-auto">
-        <div className="flex justify-center mb-8">
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-10 h-10 rounded-lg bg-accent-navy flex items-center justify-center transition-base group-hover:scale-105">
-              <Shield className="w-5 h-5 text-white" />
-            </div>
-            <span className="font-heading font-bold text-ink text-xl tracking-tight uppercase">
-              HACKER गोवा HOUSE
-            </span>
-          </Link>
-        </div>
-
-        <div className="card-base p-8 sm:p-10 shadow-sm animate-fade-in-up">
-          <div className="mb-8 text-center">
-            <h2 className="font-heading text-2xl text-ink font-bold mb-2">
-              Admin Gateway
-            </h2>
-            <p className="text-sm text-ink-secondary">
-              Sign in to manage Builder Social Cards
-            </p>
+    <main className="min-h-screen bg-paper paper-texture flex flex-col">
+      {/* Header strip */}
+      <div className="border-b border-divider bg-paper">
+        <div className="section-container">
+          <div className="h-14 flex items-center justify-between">
+            <Link href="/" className="section-label hover:text-forest transition-fast">← HOME</Link>
+            <span className="section-label">ADMIN GATEWAY</span>
           </div>
+        </div>
+      </div>
+
+      <div className="flex-1 flex flex-col justify-center py-16 px-4">
+        <div className="w-full max-w-sm mx-auto">
 
           {reason === "session_expired" && (
-            <div className="mb-6 p-4 bg-status-expired-bg border border-status-expired/20 rounded-lg flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-status-expired shrink-0 mt-0.5" />
-              <p className="text-sm text-status-expired font-medium">
-                Your session has expired. Please log in again.
+            <div className="mb-6 p-3 border flex items-start gap-3" style={{ borderColor: "var(--status-expired)", backgroundColor: "var(--status-expired-bg)" }}>
+              <p className="text-sm font-medium" style={{ color: "var(--status-expired)" }}>
+                Session expired — please sign in again.
               </p>
             </div>
           )}
 
           {error && (
-            <div className="mb-6 p-4 bg-status-revoked-bg border border-status-revoked/20 rounded-lg flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-status-revoked shrink-0 mt-0.5" />
-              <p className="text-sm text-status-revoked font-medium">
-                {error}
-              </p>
+            <div className="mb-6 p-3 border flex items-start gap-3" style={{ borderColor: "var(--pink)", backgroundColor: "var(--status-revoked-bg)" }}>
+              <p className="text-sm font-medium" style={{ color: "var(--pink)" }}>{error}</p>
             </div>
           )}
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-ink">
-                Email Address
-              </Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="admin@hackergoa.com"
-                {...register("email")}
-                className={errors.email ? "border-status-revoked" : ""}
-                disabled={isSubmitting}
-                autoComplete="email"
-              />
-              {errors.email && (
-                <p className="text-xs text-status-revoked mt-1">
-                  {errors.email.message}
-                </p>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="text-ink">
-                  Password
-                </Label>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 mt-8">
+              <div>
+                <label className="section-label block mb-1.5">EMAIL ADDRESS</label>
+                <input
+                  id="email"
+                  type="email"
+                  placeholder="admin@hackergoa.com"
+                  {...register("email")}
+                  className={`form-field ${errors.email ? "field-error" : ""}`}
+                  disabled={isSubmitting}
+                  autoComplete="email"
+                />
+                {errors.email && (
+                  <p className="text-xs mt-1 font-medium" style={{ color: "var(--pink)" }}>
+                    {errors.email.message}
+                  </p>
+                )}
               </div>
-              <Input
-                id="password"
-                type="password"
-                {...register("password")}
-                className={errors.password ? "border-status-revoked" : ""}
-                disabled={isSubmitting}
-                autoComplete="current-password"
-              />
-              {errors.password && (
-                <p className="text-xs text-status-revoked mt-1">
-                  {errors.password.message}
-                </p>
-              )}
-            </div>
 
-            <Button
-              type="submit"
-              className="w-full bg-accent-navy hover:bg-blue-700 text-white btn-tactile h-11"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Authenticating...
-                </>
-              ) : (
-                "Sign In"
-              )}
-            </Button>
+              <div>
+                <label className="section-label block mb-1.5">PASSWORD</label>
+                <input
+                  id="password"
+                  type="password"
+                  {...register("password")}
+                  className={`form-field ${errors.password ? "field-error" : ""}`}
+                  disabled={isSubmitting}
+                  autoComplete="current-password"
+                />
+                {errors.password && (
+                  <p className="text-xs mt-1 font-medium" style={{ color: "var(--pink)" }}>
+                    {errors.password.message}
+                  </p>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                className="btn-primary w-full justify-center disabled:opacity-60 disabled:cursor-not-allowed"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <><Loader2 className="w-4 h-4 animate-spin" /> Authenticating…</>
+                ) : (
+                  "SIGN IN →"
+                )}
+              </button>
           </form>
         </div>
       </div>
@@ -166,7 +139,7 @@ function AdminLoginForm() {
 
 export default function AdminLoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-canvas flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-accent-navy" /></div>}>
+    <Suspense fallback={<div className="min-h-screen bg-paper flex items-center justify-center"><Loader2 className="w-6 h-6 animate-spin text-forest" /></div>}>
       <AdminLoginForm />
     </Suspense>
   );

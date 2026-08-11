@@ -5,6 +5,8 @@ import { uploadPhoto, validatePhotoFile } from "@/lib/storage";
 import { registrationSchema } from "@/lib/validation";
 import { UserStatus, OrganizationType } from "@/types";
 import { checkRateLimit } from "@/lib/auth";
+import { calculateExpiryDate } from "@/lib/utils";
+import crypto from "crypto";
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
@@ -93,24 +95,30 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    // 8. Create User Document
-    const crypto = require('crypto');
-    const verificationToken = crypto.randomBytes(32).toString('hex');
-    
+    // 8. Generate uniqueId, dates, and secure verification token
+    const uniqueId = await (User as any).generateUniqueId("PASS");
+    const issueDate = new Date();
+    const expiryDate = calculateExpiryDate(issueDate, 365);
+    const verificationToken = crypto.randomBytes(32).toString("hex");
+
     const newUser = await User.create({
       ...validation.data,
       fullName: fullName,
       photoUrl: uploadResult.secureUrl,
-      status: UserStatus.PENDING,
+      uniqueId,
+      issueDate,
+      expiryDate,
+      status: UserStatus.ACTIVE,
       verificationToken,
     });
 
-    // 8. Return success (excluding internal IDs)
+    // 9. Return success (excluding internal IDs and private fields)
     return NextResponse.json({
       success: true,
-      message: "Application submitted successfully.",
+      message: "Builder Social Card generated successfully.",
       data: {
-        email: newUser.email,
+        verificationToken,
+        uniqueId: newUser.uniqueId,
         status: newUser.status,
       },
     });

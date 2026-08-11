@@ -1,209 +1,217 @@
 import Link from "next/link";
-import { Shield, QrCode, Users, ArrowRight, CheckCircle, Lock, BadgeCheck } from "lucide-react";
-
-// ============================================================
-// Landing Page — Phase 1 Placeholder
-// Full implementation in Phase 5 (Admin) / Phase 7 (Verification)
-// ============================================================
+import { ArrowRight } from "lucide-react";
 
 export default function HomePage() {
   return (
-    <main className="flex-1">
-      {/* Navigation */}
-      <nav className="border-b border-divider bg-surface sticky top-0 z-50">
-        <div className="section-container flex items-center justify-between h-16">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-accent-navy flex items-center justify-center">
-              <Shield className="w-4 h-4 text-white" />
+    <main className="flex-1 bg-paper paper-texture">
+
+      {/* ── NAVIGATION ──────────────────────────────────────── */}
+      <nav className="border-b border-divider bg-paper sticky top-0 z-50">
+        <div className="section-container">
+          <div className="flex items-center justify-between h-14">
+            {/* Brand */}
+            <div className="flex flex-col leading-none">
+              <span className="font-heading text-sm font-bold text-forest tracking-tight uppercase">
+                HACKER गोवा HOUSE
+              </span>
+              <span className="font-mono text-[10px] text-ink-secondary tracking-widest uppercase">
+                Builder Social Card Generator
+              </span>
             </div>
-            <span className="font-heading font-bold text-ink text-lg tracking-tight">
-              HACKER गोवा HOUSE
-            </span>
-          </div>
-          <div className="flex items-center gap-3">
-            <Link
-              href="/verify"
-              className="text-sm font-medium text-ink-secondary hover:text-ink transition-fast px-3 py-1.5 rounded-md hover:bg-surface-raised"
-            >
-              Verify an ID
-            </Link>
-            <Link
-              href="/register"
-              className="text-sm font-medium bg-accent-navy text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-fast btn-tactile"
-            >
-              Get Your ID Card
-            </Link>
+
+            {/* Nav links */}
+            <div className="flex items-center gap-6">
+              <Link
+                href="/verify/demo"
+                className="section-label text-ink-secondary hover:text-forest transition-fast hidden sm:block"
+              >
+                Verify an ID
+              </Link>
+              <Link
+                href="/register"
+                className="btn-primary text-sm py-2 px-4"
+              >
+                Get Your Pass
+              </Link>
+            </div>
           </div>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="bg-canvas border-b border-divider">
-        <div className="section-container py-24 lg:py-32">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            {/* Left: Text */}
-            <div>
-              <div className="inline-flex items-center gap-2 text-accent text-xs font-semibold tracking-widest uppercase mb-6 bg-accent-surface px-3 py-1.5 rounded-full border border-blue-100">
-                <BadgeCheck className="w-3.5 h-3.5" />
-                Trusted Identity Platform
-              </div>
-              <h1 className="font-heading text-4xl lg:text-5xl xl:text-6xl text-ink mb-6 leading-[1.1] uppercase">
-                GENERATE YOUR{" "}
-                <span className="text-accent-navy">goa गोवा PASS</span>
+      {/* ── HERO ──────────────────────────────────────────────── */}
+      <section className="border-b border-divider">
+        <div className="section-container">
+          {/* Top metadata strip */}
+          <div className="flex items-center justify-between py-4 border-b border-divider/50">
+            <span className="section-label">HACKER HOUSE GOA / 2026</span>
+            <span className="section-label">BUILDER PASS STUDIO</span>
+          </div>
+
+          <div className="grid lg:grid-cols-[3fr_2fr] gap-0 items-stretch">
+            {/* Left: headline block */}
+            <div className="py-16 lg:py-24 lg:pr-16 lg:border-r border-divider">
+              <p className="section-label mb-8">01 — IDENTITY SYSTEM</p>
+
+              <h1 className="font-heading font-black text-near-black uppercase leading-none mb-8">
+                <span className="block text-[clamp(3rem,10vw,7rem)] tracking-tighter">GENERATE</span>
+                <span className="block text-[clamp(3rem,10vw,7rem)] tracking-tighter">YOUR</span>
+                <span className="block text-[clamp(2.5rem,8vw,5.5rem)] tracking-tight text-forest">goa गोवा</span>
+                <span className="block text-[clamp(2.5rem,8vw,5.5rem)] tracking-tight text-forest">BUILDER</span>
+                <span className="block text-[clamp(3rem,10vw,7rem)] tracking-tighter">PASS</span>
               </h1>
-              <p className="text-ink-secondary text-lg leading-relaxed mb-8 max-w-xl">
-                The Builder Social Card Generator for HACKER गोवा HOUSE. Get your pass,
-                join the community, and verify authenticity instantly.
+
+              <p className="text-ink-secondary text-lg max-w-sm leading-relaxed mb-10">
+                Upload a photo. Claim your pass.
+                <br />Keep building.
               </p>
-              <div className="flex flex-col sm:flex-row gap-3">
-                <Link
-                  href="/register"
-                  className="inline-flex items-center justify-center gap-2 bg-accent-navy text-white font-semibold px-6 py-3 rounded-lg hover:bg-blue-700 transition-fast btn-tactile"
-                >
-                  Get Your ID Card
-                  <ArrowRight className="w-4 h-4" />
+
+              <div className="flex flex-col sm:flex-row items-start gap-3">
+                <Link href="/register" className="btn-primary group">
+                  CREATE YOUR BUILDER PASS
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </Link>
-                <Link
-                  href="/verify"
-                  className="inline-flex items-center justify-center gap-2 border border-divider text-ink font-medium px-6 py-3 rounded-lg hover:bg-surface-raised transition-fast"
-                >
-                  <QrCode className="w-4 h-4" />
-                  Verify an ID
+                <Link href="/verify/demo" className="btn-secondary hidden sm:inline-flex">
+                  VERIFY AN ID
                 </Link>
+              </div>
+
+              <div className="mt-8 flex items-center gap-6">
+                <div>
+                  <p className="section-label">LOCATION</p>
+                  <p className="text-sm font-medium text-forest mt-0.5">GOA / INDIA</p>
+                </div>
+                <div className="w-px h-8 bg-divider" />
+                <div>
+                  <p className="section-label">DATES</p>
+                  <p className="text-sm font-medium text-forest mt-0.5">OCT 28–31, 2026</p>
+                </div>
+                <div className="w-px h-8 bg-divider hidden sm:block" />
+                <div className="hidden sm:block">
+                  <p className="section-label">EDITION</p>
+                  <p className="text-sm font-medium text-forest mt-0.5">v1 / 2026</p>
+                </div>
               </div>
             </div>
 
-            {/* Right: Feature highlights */}
-            <div className="grid grid-cols-1 gap-4">
-              {[
-                {
-                  icon: <Shield className="w-5 h-5" />,
-                  title: "Secure Verification",
-                  desc: "QR codes contain only a verification URL — never personal data.",
-                },
-                {
-                  icon: <QrCode className="w-5 h-5" />,
-                  title: "Instant QR Scanning",
-                  desc: "Anyone can scan the QR code to verify authenticity in seconds.",
-                },
-                {
-                  icon: <Users className="w-5 h-5" />,
-                  title: "Organization Management",
-                  desc: "Admin dashboard to approve, manage, and revoke ID cards.",
-                },
-                {
-                  icon: <Lock className="w-5 h-5" />,
-                  title: "Privacy First",
-                  desc: "Email, phone, and address are never exposed on the public verification page.",
-                },
-              ].map((feature, i) => (
-                <div
-                  key={i}
-                  className={`card-base p-5 animate-fade-in-up stagger-${i + 1}`}
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-accent-surface flex items-center justify-center text-accent-navy">
-                      {feature.icon}
+            {/* Right: minimal info panel */}
+            <div className="lg:pl-10 py-16 lg:py-24 hidden lg:flex flex-col justify-between">
+              <div>
+                <p className="section-label mb-4">ABOUT THE PASS</p>
+                <div className="space-y-5">
+                  {[
+                    { num: "01", text: "Submit your details and a clear photo through the registration form." },
+                    { num: "02", text: "An admin reviews and approves your application." },
+                    { num: "03", text: "Your physical-quality ID card is generated — download PNG or PDF." },
+                    { num: "04", text: "Anyone can scan the QR code to verify your pass in real-time." },
+                  ].map(item => (
+                    <div key={item.num} className="flex gap-4">
+                      <span className="font-mono text-xs text-ink-secondary mt-0.5 shrink-0">{item.num}</span>
+                      <p className="text-sm text-ink-secondary leading-relaxed">{item.text}</p>
                     </div>
-                    <div>
-                      <h3 className="font-semibold text-ink text-sm mb-1">
-                        {feature.title}
-                      </h3>
-                      <p className="text-ink-secondary text-sm leading-relaxed">
-                        {feature.desc}
-                      </p>
-                    </div>
-                  </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+
+              <div className="border border-divider p-5 mt-8">
+                <p className="section-label mb-3">SECURITY NOTES</p>
+                <ul className="space-y-2">
+                  {[
+                    "QR codes contain zero personal data",
+                    "Cryptographic verification tokens",
+                    "90-day scan log TTL (privacy by design)",
+                    "HTTP-only sessions",
+                  ].map(note => (
+                    <li key={note} className="flex items-start gap-2 text-xs text-ink-secondary">
+                      <span className="text-forest mt-0.5">—</span>
+                      {note}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="bg-surface py-20">
-        <div className="section-container">
-          <div className="max-w-2xl mb-14">
-            <h2 className="font-heading text-3xl text-ink mb-4">
-              How verification works
-            </h2>
-            <p className="text-ink-secondary leading-relaxed">
-              A simple, secure three-step process that anyone can use to verify
-              an ID — no app required.
-            </p>
+      {/* ── HOW IT WORKS ─────────────────────────────────────── */}
+      <section className="border-b border-divider bg-surface">
+        <div className="section-container py-16">
+          <div className="flex items-center justify-between mb-12">
+            <div>
+              <p className="section-label mb-2">02 — PROCESS</p>
+              <h2 className="font-heading text-2xl font-bold text-near-black uppercase tracking-tight">
+                How it works
+              </h2>
+            </div>
+            <span className="section-label hidden sm:block">FOUR STEPS</span>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-0 border border-divider">
             {[
-              {
-                step: "01",
-                title: "Register",
-                desc: "Submit your details and photo. Our team reviews your application.",
-              },
-              {
-                step: "02",
-                title: "Get Approved",
-                desc: "Once approved, your professional ID card is generated with a unique QR code.",
-              },
-              {
-                step: "03",
-                title: "Verify Instantly",
-                desc: "Anyone can scan the QR code or enter your unique ID to verify authenticity.",
-              },
+              { num: "01", label: "REGISTER", desc: "Fill out the form. Upload a clear photo." },
+              { num: "02", label: "REVIEW", desc: "Admin reviews your application within 24h." },
+              { num: "03", label: "PASS", desc: "Download your print-ready ID card (PNG / PDF)." },
+              { num: "04", label: "VERIFY", desc: "Anyone scans the QR — instant verification." },
             ].map((step, i) => (
-              <div key={i} className="relative">
-                <div className="font-mono text-5xl font-bold text-blue-50 mb-4 select-none">
-                  {step.step}
-                </div>
-                <h3 className="font-heading text-xl text-ink mb-2">
-                  {step.title}
+              <div
+                key={step.num}
+                className={`p-8 ${i < 3 ? 'sm:border-r border-b sm:border-b-0 lg:border-b-0' : ''} border-divider`}
+              >
+                <span className="font-mono text-[2.5rem] font-bold text-divider leading-none block mb-4 select-none">
+                  {step.num}
+                </span>
+                <h3 className="font-heading text-sm font-bold text-near-black uppercase tracking-wider mb-2">
+                  {step.label}
                 </h3>
-                <p className="text-ink-secondary leading-relaxed">{step.desc}</p>
+                <p className="text-sm text-ink-secondary leading-relaxed">{step.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Trust indicators */}
-      <section className="bg-canvas border-t border-divider py-16">
-        <div className="section-container">
-          <div className="flex flex-col md:flex-row items-center gap-8 justify-center">
-            {[
-              { icon: <CheckCircle className="w-5 h-5" />, text: "No personal data in QR codes" },
-              { icon: <Lock className="w-5 h-5" />, text: "bcrypt password hashing" },
-              { icon: <Shield className="w-5 h-5" />, text: "HTTP-only secure sessions" },
-              { icon: <BadgeCheck className="w-5 h-5" />, text: "Cryptographically secure tokens" },
-            ].map((item, i) => (
-              <div key={i} className="flex items-center gap-2.5 text-ink-secondary">
-                <span className="text-status-active">{item.icon}</span>
-                <span className="text-sm font-medium">{item.text}</span>
-              </div>
-            ))}
+      {/* ── CTA STRIP ────────────────────────────────────────── */}
+      <section className="bg-forest border-b border-divider">
+        <div className="section-container py-16">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+            <div>
+              <p className="font-mono text-xs text-yellow tracking-widest uppercase mb-3">
+                HACKER HOUSE GOA — 2026
+              </p>
+              <h2 className="font-heading text-3xl lg:text-4xl font-black text-paper uppercase tracking-tight leading-none">
+                Ready to build?
+                <br />Get your pass.
+              </h2>
+            </div>
+            <Link href="/register" className="btn-primary shrink-0 group">
+              CREATE YOUR BUILDER PASS
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-surface border-t border-divider py-8">
-        <div className="section-container flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <Shield className="w-4 h-4 text-accent-navy" />
-            <span className="font-heading font-bold text-ink text-sm">HACKER गोवा HOUSE</span>
-          </div>
-          <p className="text-ink-secondary text-xs">
-            Builder Social Card Generator
-          </p>
-          <div className="flex items-center gap-4 text-xs text-ink-secondary">
-            <Link href="/admin/login" className="hover:text-ink transition-fast">
-              Admin
-            </Link>
-            <Link href="/verify" className="hover:text-ink transition-fast">
-              Verify
-            </Link>
-            <Link href="/register" className="hover:text-ink transition-fast">
-              Register
-            </Link>
+      {/* ── FOOTER ───────────────────────────────────────────── */}
+      <footer className="bg-paper border-t border-divider">
+        <div className="section-container py-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <span className="font-heading text-sm font-bold text-forest uppercase tracking-tight">
+                HACKER गोवा HOUSE
+              </span>
+              <p className="section-label mt-0.5">BUILDER PASS STUDIO / 2026</p>
+            </div>
+            <div className="flex items-center gap-5">
+              <Link href="/admin/login" className="section-label hover:text-forest transition-fast">
+                Admin
+              </Link>
+              <Link href="/verify/demo" className="section-label hover:text-forest transition-fast">
+                Verify
+              </Link>
+              <Link href="/register" className="section-label hover:text-forest transition-fast">
+                Register
+              </Link>
+            </div>
           </div>
         </div>
       </footer>
