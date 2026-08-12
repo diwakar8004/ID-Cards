@@ -63,8 +63,8 @@ export default function RegisterPage() {
 
   const steps = [
     { label: "submit", description: "Send your name, photo, and builder details." },
-    { label: "review", description: "A human reviews your submission within 24 hours." },
-    { label: "pass", description: "Your print-ready ID is generated for download." },
+    { label: "generate", description: "Your unique pass is generated automatically in seconds." },
+    { label: "download", description: "Save your print-ready ID card as PNG or PDF." },
     { label: "verify", description: "Anyone scans the QR to confirm your pass instantly." },
   ];
 
@@ -446,7 +446,7 @@ export default function RegisterPage() {
           <div className="rounded-none border border-divider bg-surface p-6">
             <p className="font-heading text-sm font-black uppercase tracking-tight mb-3">Less Noise. More Signal.</p>
             <p className="text-sm text-text-muted leading-relaxed">
-              Submit once. Get approved once. Carry your pass into every verification moment.
+              Submit once. Generate instantly. Carry your pass into every verification moment.
             </p>
           </div>
         </div>

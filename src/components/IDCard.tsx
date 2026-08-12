@@ -117,7 +117,7 @@ function CardBackgroundSVG() {
         {/* ── Dot grid */}
         {Array.from({ length: 22 }).flatMap((_, r) =>
           Array.from({ length: 14 }).map((_, c) => (
-            <circle key={`d${r}${c}`} cx={c * 26 + 13} cy={r * 26 + 13} r="0.85" fill="#F5C518" opacity="0.08" />
+            <circle key={`d-${r}-${c}`} cx={c * 26 + 13} cy={r * 26 + 13} r="0.85" fill="#F5C518" opacity="0.08" />
           ))
         )}
 

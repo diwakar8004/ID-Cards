@@ -77,9 +77,6 @@ export function PageFooter() {
             <WordmarkLogoDark />
             <PageCreditLine />
           </div>
-          <Link href="/register" className="btn-primary text-sm px-5 py-2.5">
-            APPLY FOR YOUR PASS
-          </Link>
         </div>
       </div>
     </footer>

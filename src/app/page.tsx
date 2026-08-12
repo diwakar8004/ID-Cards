@@ -344,9 +344,9 @@ export default function HomePage() {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-0">
             {[
-              { num: "01", label: "REGISTER", desc: "Fill out the form. Upload a clear photo.", icon: "📝" },
-              { num: "02", label: "REVIEW", desc: "Admin reviews your application within 24h.", icon: "👀" },
-              { num: "03", label: "PASS", desc: "Download your print-ready ID card (PNG / PDF).", icon: "🪪" },
+              { num: "01", label: "SUBMIT", desc: "Fill out the form with your details and photo.", icon: "📝" },
+              { num: "02", label: "GENERATE", desc: "Your unique ID card is generated automatically.", icon: "⚡" },
+              { num: "03", label: "DOWNLOAD", desc: "Save your print-ready ID card as PNG or PDF.", icon: "🪪" },
               { num: "04", label: "VERIFY", desc: "Anyone scans the QR — instant verification.", icon: "✅" },
             ].map((step, i) => (
               <div
@@ -406,8 +406,8 @@ export default function HomePage() {
               <div className="space-y-5">
                 {[
                   { num: "01", text: "Submit your details and a clear photo through the registration form." },
-                  { num: "02", text: "An admin reviews and approves your application." },
-                  { num: "03", text: "Your physical-quality ID card is generated — download PNG or PDF." },
+                  { num: "02", text: "Your unique pass is generated automatically in seconds." },
+                  { num: "03", text: "Your physical-quality ID card is ready — download PNG or PDF." },
                   { num: "04", text: "Anyone can scan the QR code to verify your pass in real-time." },
                 ].map(item => (
                   <div key={item.num} className="flex gap-4 items-start">
