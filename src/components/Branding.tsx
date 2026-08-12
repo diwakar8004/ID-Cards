@@ -1,5 +1,4 @@
 import type React from "react";
-import Link from "next/link";
 
 /**
  * Main wordmark: HACKER [गोवा] HOUSE
