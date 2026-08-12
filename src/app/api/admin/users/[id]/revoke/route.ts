@@ -36,7 +36,7 @@ export async function PATCH(
 
     return NextResponse.json({
       success: true,
-      data: { id: user._id, status: user.status }
+      data: { id: user._id.toString(), status: user.status }
     });
   } catch (error) {
     console.error("[Admin Revoke API] Error:", error);

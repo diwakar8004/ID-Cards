@@ -202,9 +202,10 @@ function RightPanel({ user }: { user: CardData }) {
   }, []);
 
   useEffect(() => {
-    computeScale();
-    window.addEventListener("resize", computeScale);
-    return () => window.removeEventListener("resize", computeScale);
+    const runResize = () => requestAnimationFrame(computeScale);
+    runResize();
+    window.addEventListener("resize", runResize);
+    return () => window.removeEventListener("resize", runResize);
   }, [computeScale]);
 
   return (

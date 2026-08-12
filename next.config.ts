@@ -16,10 +16,6 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  experimental: {
-    // Enable server actions (stable in Next.js 15+)
-  },
-
   // Security headers
   async headers() {
     return [

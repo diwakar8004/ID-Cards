@@ -4,15 +4,22 @@ import { verifySessionToken } from "@/lib/auth";
 // ============================================================
 // Next.js Middleware — Admin Route Protection
 // ============================================================
+//
+// IMPORTANT: This middleware runs in the Node.js runtime (not Edge)
+// because it uses `jsonwebtoken` which depends on Node.js `crypto`.
+// The `runtime = "nodejs"` config ensures `process.env.AUTH_SECRET`
+// and `crypto` are available for JWT verification.
 
 const ADMIN_ROUTES = /^\/admin(\/|$)/;
 const PUBLIC_ADMIN_ROUTES = ["/admin/login"];
+// API routes that are accessible without authentication (initial setup only)
+const PUBLIC_ADMIN_API_ROUTES = ["/api/admin/seed"];
 
 export function middleware(request: NextRequest): NextResponse {
   const { pathname } = request.nextUrl;
 
   // Only handle admin routes
-  if (!ADMIN_ROUTES.test(pathname)) {
+  if (!ADMIN_ROUTES.test(pathname) && !pathname.startsWith("/api/admin")) {
     return NextResponse.next();
   }
 
@@ -29,10 +36,19 @@ export function middleware(request: NextRequest): NextResponse {
     return NextResponse.next();
   }
 
+  // Allow seed endpoint without authentication (initial setup only)
+  if (PUBLIC_ADMIN_API_ROUTES.some((route) => pathname.startsWith(route))) {
+    return NextResponse.next();
+  }
+
   // Check authentication for all other admin routes
   const sessionToken = request.cookies.get("idverify_session")?.value;
+  const isApiRoute = pathname.startsWith("/api/admin");
 
   if (!sessionToken) {
+    if (isApiRoute) {
+      return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    }
     const loginUrl = new URL("/admin/login", request.url);
     loginUrl.searchParams.set("from", pathname);
     return NextResponse.redirect(loginUrl);
@@ -41,6 +57,11 @@ export function middleware(request: NextRequest): NextResponse {
   const session = verifySessionToken(sessionToken);
 
   if (!session) {
+    if (isApiRoute) {
+      const response = NextResponse.json({ success: false, error: "Session expired" }, { status: 401 });
+      response.cookies.delete("idverify_session");
+      return response;
+    }
     // Invalid or expired token
     const loginUrl = new URL("/admin/login", request.url);
     loginUrl.searchParams.set("from", pathname);
@@ -65,3 +86,6 @@ export const config = {
     "/api/admin/:path*",
   ],
 };
+
+// Force Node.js runtime — jsonwebtoken requires Node.js crypto
+export const runtime = "nodejs";

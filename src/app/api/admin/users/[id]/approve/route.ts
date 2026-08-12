@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
 import User from "@/models/User";
 import { UserStatus } from "@/types";
-import { calculateExpiryDate } from "@/lib/utils";
 import { approveUserSchema } from "@/lib/validation";
 import { getSession } from "@/lib/auth";
 import { ApiResponse } from "@/types";
+import { calculateExpiryDate } from "@/lib/utils";
 
 export async function PATCH(
   request: NextRequest,
@@ -20,7 +20,7 @@ export async function PATCH(
     const { id } = await params;
     const body = await request.json().catch(() => ({}));
 
-    // Allow overriding default validity days
+    // Validate and parse the optional validityDays override
     const validation = approveUserSchema.safeParse(body);
     const validityDays = validation.success ? validation.data.validityDays : 365;
 
@@ -41,9 +41,10 @@ export async function PATCH(
       user.uniqueId = await (User as unknown as { generateUniqueId: (prefix: string) => Promise<string> }).generateUniqueId("PASS");
     }
 
-    // Set dates and status
-    user.issueDate = new Date();
-    user.expiryDate = new Date("2026-10-31T23:59:59.999Z");
+    // Set dates and status — expiry is calculated from validityDays
+    const issueDate = new Date();
+    user.issueDate = issueDate;
+    user.expiryDate = calculateExpiryDate(issueDate, validityDays);
     user.status = UserStatus.ACTIVE;
 
     await user.save();
@@ -51,7 +52,7 @@ export async function PATCH(
     return NextResponse.json({
       success: true,
       data: {
-        id: user._id,
+        id: user._id.toString(),
         status: user.status,
         uniqueId: user.uniqueId,
         issueDate: user.issueDate,

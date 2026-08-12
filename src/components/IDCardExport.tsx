@@ -23,7 +23,7 @@ export function IDCardExport({ user, verificationToken }: IDCardExportProps) {
   return (
     <div className="flex flex-col items-center gap-6 w-full">
       {/* Card preview */}
-      <div className="inline-block scale-[1.15] sm:scale-[1.25] md:scale-[1.3]">
+      <div className="inline-block scale-[0.82] sm:scale-[0.9] -my-6 origin-center">
         {qrCodeDataUrl ? (
           <IDCard
             ref={cardRef}

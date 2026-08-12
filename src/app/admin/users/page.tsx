@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { 
   MoreHorizontal, 
   Search, 
@@ -8,7 +9,8 @@ import {
   XCircle, 
   ShieldBan,
   Loader2,
-  Filter
+  Filter,
+  AlertCircle
 } from "lucide-react";
 import { UserStatus } from "@/types";
 import Link from "next/link";
@@ -41,7 +43,7 @@ import { getStatusBadgeClass, getStatusLabel } from "@/lib/utils";
 import { IDCardExport } from "@/components/IDCardExport";
 
 interface AdminUser {
-  _id: string;
+  id: string;
   fullName: string;
   email: string;
   photoUrl: string;
@@ -57,8 +59,11 @@ interface AdminUser {
 }
 
 export default function AdminUsersPage() {
+  const router = useRouter();
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [page, setPage] = useState(1);
@@ -67,6 +72,7 @@ export default function AdminUsersPage() {
 
   const fetchUsers = useCallback(async () => {
     setLoading(true);
+    setErrorMessage(null);
     try {
       const params = new URLSearchParams({
         page: page.toString(),
@@ -76,21 +82,29 @@ export default function AdminUsersPage() {
       });
 
       const res = await fetch(`/api/admin/users?${params.toString()}`);
+
+      if (res.status === 401) {
+        router.push("/admin/login?reason=session_expired");
+        return;
+      }
+
       const json = await res.json();
       
       if (json.success) {
-        setUsers(json.data.data);
+        setUsers(json.data.data || []);
         setTotalPages(json.data.totalPages || 1);
+      } else {
+        setErrorMessage(json.error || "Failed to load users");
       }
     } catch (error) {
       console.error("Failed to fetch users", error);
+      setErrorMessage("Network error — failed to connect to admin server.");
     } finally {
       setLoading(false);
     }
-  }, [page, search, statusFilter]);
+  }, [page, search, statusFilter, router]);
 
   useEffect(() => {
-    // Debounce search
     const timer = setTimeout(() => {
       fetchUsers();
     }, 300);
@@ -98,18 +112,27 @@ export default function AdminUsersPage() {
   }, [page, search, statusFilter, fetchUsers]);
 
   const handleAction = async (userId: string, action: "approve" | "reject" | "revoke") => {
+    setActionLoadingId(userId);
     try {
       const res = await fetch(`/api/admin/users/${userId}/${action}`, {
         method: "PATCH",
       });
+
+      if (res.status === 401) {
+        router.push("/admin/login?reason=session_expired");
+        return;
+      }
+
       const json = await res.json();
       if (json.success) {
-        fetchUsers(); // Refresh data
+        await fetchUsers(); // Refresh table data
       } else {
         alert(json.error || `Failed to ${action} user`);
       }
     } catch {
       alert(`An error occurred while trying to ${action} the user.`);
+    } finally {
+      setActionLoadingId(null);
     }
   };
 
@@ -124,6 +147,13 @@ export default function AdminUsersPage() {
           ← BACK TO DASHBOARD
         </Link>
       </div>
+
+      {errorMessage && (
+        <div className="p-4 border border-status-rejected-bg bg-status-rejected-bg rounded-xl flex items-center gap-3 text-status-rejected text-sm font-medium">
+          <AlertCircle className="w-5 h-5 shrink-0" />
+          <span>{errorMessage}</span>
+        </div>
+      )}
 
       {/* Toolbar */}
       <div className="flex flex-col sm:flex-row gap-4 justify-between items-center bg-surface p-4 rounded-xl border border-divider shadow-sm">
@@ -163,7 +193,7 @@ export default function AdminUsersPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-warm-cream rounded-xl border border-divider overflow-hidden">
+      <div className="bg-warm-cream rounded-xl border border-divider overflow-hidden shadow-sm">
         <div className="overflow-x-auto min-h-[400px]">
           <table className="w-full text-sm text-left relative">
             <thead className="bg-deep-green text-xs text-warm-cream uppercase font-semibold tracking-wider sticky top-0 z-10">
@@ -190,18 +220,18 @@ export default function AdminUsersPage() {
                 </tr>
               ) : (
                 users.map((user) => (
-                  <tr key={user._id} className="hover:bg-surface transition-fast">
+                  <tr key={user.id} className="hover:bg-surface transition-fast">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         {user.photoUrl ? (
                           // eslint-disable-next-line @next/next/no-img-element
-                          <img src={user.photoUrl} alt="" className="w-10 h-10 rounded-full object-cover border border-divider" />
+                          <img src={user.photoUrl} alt="" className="w-10 h-10 rounded-full object-cover border border-divider shrink-0" />
                         ) : (
-                          <div className="w-10 h-10 rounded-full bg-surface-raised border border-divider" />
+                          <div className="w-10 h-10 rounded-full bg-surface-raised border border-divider shrink-0" />
                         )}
-                        <div>
-                          <p className="font-medium text-text-deep">{user.fullName}</p>
-                          <p className="text-xs text-muted-green">{user.email}</p>
+                        <div className="min-w-0">
+                          <p className="font-medium text-text-deep truncate">{user.fullName}</p>
+                          <p className="text-xs text-muted-green truncate">{user.email}</p>
                         </div>
                       </div>
                     </td>
@@ -224,42 +254,45 @@ export default function AdminUsersPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger className="p-2 hover:bg-surface-raised rounded-md text-muted-green">
-                          <span className="sr-only">Open menu</span>
-                          <MoreHorizontal className="h-4 w-4" />
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="bg-warm-cream border-divider">
-                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                          <DropdownMenuSeparator className="bg-divider" />
-                          
-                          {user.status === UserStatus.PENDING && (
-                            <>
-                              <DropdownMenuItem onClick={() => handleAction(user._id, "approve")} className="focus:bg-surface focus:text-status-active">
-                                <CheckCircle className="mr-2 w-4 h-4" />
-                                Approve
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleAction(user._id, "reject")} className="focus:bg-surface focus:text-status-rejected">
-                                <XCircle className="mr-2 w-4 h-4" />
-                                Reject
-                              </DropdownMenuItem>
-                            </>
-                            )
-                          }
+                      {actionLoadingId === user.id ? (
+                        <Loader2 className="w-4 h-4 animate-spin text-deep-green ml-auto" />
+                      ) : (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger className="p-2 hover:bg-surface-raised rounded-md text-muted-green">
+                            <span className="sr-only">Open menu</span>
+                            <MoreHorizontal className="h-4 w-4" />
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="bg-warm-cream border-divider">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuSeparator className="bg-divider" />
+                            
+                            {user.status === UserStatus.PENDING && (
+                              <>
+                                <DropdownMenuItem onClick={() => handleAction(user.id, "approve")} className="focus:bg-surface focus:text-status-active cursor-pointer">
+                                  <CheckCircle className="mr-2 w-4 h-4" />
+                                  Approve
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleAction(user.id, "reject")} className="focus:bg-surface focus:text-status-rejected cursor-pointer">
+                                  <XCircle className="mr-2 w-4 h-4" />
+                                  Reject
+                                </DropdownMenuItem>
+                              </>
+                            )}
 
-                          {user.status === UserStatus.ACTIVE && (
-                            <DropdownMenuItem onClick={() => handleAction(user._id, "revoke")} className="focus:bg-surface focus:text-status-revoked">
-                              <ShieldBan className="mr-2 w-4 h-4" />
-                              Revoke Pass
+                            {user.status === UserStatus.ACTIVE && (
+                              <DropdownMenuItem onClick={() => handleAction(user.id, "revoke")} className="focus:bg-surface focus:text-status-revoked cursor-pointer">
+                                <ShieldBan className="mr-2 w-4 h-4" />
+                                Revoke Pass
+                              </DropdownMenuItem>
+                            )}
+                            
+                            <DropdownMenuSeparator className="bg-divider" />
+                            <DropdownMenuItem onClick={() => setSelectedUser(user)} className="focus:bg-surface cursor-pointer">
+                              View Details / ID Card
                             </DropdownMenuItem>
-                          )}
-                          
-                          <DropdownMenuSeparator className="bg-divider" />
-                          <DropdownMenuItem onClick={() => setSelectedUser(user)} className="focus:bg-surface">
-                            View Details / ID Card
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      )}
                     </td>
                   </tr>
                 ))
@@ -300,15 +333,15 @@ export default function AdminUsersPage() {
 
       {/* ID Card / User Details Modal */}
       <Dialog open={!!selectedUser} onOpenChange={(open) => !open && setSelectedUser(null)}>
-        <DialogContent className="max-w-md bg-warm-cream border-divider">
+        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto bg-warm-cream border-divider p-6">
           <DialogHeader>
-            <DialogTitle className="font-heading text-text-deep">Builder Social Card</DialogTitle>
+            <DialogTitle className="font-heading text-text-deep">Builder Pass Preview</DialogTitle>
             <DialogDescription className="text-muted-green">
-              View and export the official ID card for this user.
+              View and export the official ID card for this builder.
             </DialogDescription>
           </DialogHeader>
           
-          <div className="flex justify-center py-4">
+          <div className="flex justify-center py-2 overflow-hidden">
             {selectedUser && (
               <IDCardExport
                 user={{

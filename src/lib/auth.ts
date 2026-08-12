@@ -53,6 +53,7 @@ export function createSessionToken(payload: AdminSession): string {
 /**
  * Verify and decode a JWT session token.
  * Returns null if invalid or expired.
+ * Logs the specific error for debugging (does not expose it to the client).
  */
 export function verifySessionToken(token: string): AdminSession | null {
   try {
@@ -66,7 +67,11 @@ export function verifySessionToken(token: string): AdminSession | null {
       email: payload.email,
       name: payload.name,
     };
-  } catch {
+  } catch (err) {
+    // Log for debugging — the error is never sent to the client
+    if (process.env.NODE_ENV === "development") {
+      console.warn("[auth] Session token verification failed:", (err as Error).message);
+    }
     return null;
   }
 }

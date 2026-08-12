@@ -26,6 +26,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const router = useRouter();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
+  // Do not wrap login page with sidebar/header layout
+  if (pathname.startsWith("/admin/login")) {
+    return <>{children}</>;
+  }
+
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {

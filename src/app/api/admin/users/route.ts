@@ -39,20 +39,33 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       ];
     }
     
-    // Execute query
+    // Execute query — select only the fields the admin UI needs
+    // Using .select("-__v") removes the version key. The toJSON transform
+    // on the schema adds a string `id` from `_id`, but .lean() skips transforms,
+    // so we add the id manually in the response below.
     const [users, total] = await Promise.all([
       User.find(query)
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(pageSize)
+        .select("-__v")
         .lean(),
       User.countDocuments(query)
     ]);
+
+    // Normalize _id to string id for clean JSON without ObjectId objects
+    const safeUsers = users.map((doc) => {
+      const { _id, ...rest } = doc;
+      return {
+        id: _id?.toString(),
+        ...rest,
+      };
+    });
     
     return NextResponse.json({
       success: true,
       data: {
-        data: users,
+        data: safeUsers,
         total,
         page,
         pageSize,
