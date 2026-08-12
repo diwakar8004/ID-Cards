@@ -10,6 +10,7 @@ import Image from "next/image";
 import { z } from "zod";
 import { registrationSchema } from "@/lib/validation";
 import { OrganizationType } from "@/types";
+import { PageFooter } from "@/components/Branding";
 
 type ClientRegistrationFormData = z.infer<typeof registrationSchema>;
 
@@ -59,6 +60,13 @@ export default function RegisterPage() {
       organizationType: OrganizationType.ORGANIZATION,
     },
   });
+
+  const steps = [
+    { label: "submit", description: "Send your name, photo, and builder details." },
+    { label: "review", description: "A human reviews your submission within 24 hours." },
+    { label: "pass", description: "Your print-ready ID is generated for download." },
+    { label: "verify", description: "Anyone scans the QR to confirm your pass instantly." },
+  ];
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -112,39 +120,115 @@ export default function RegisterPage() {
   };
 
   return (
-    <main className="min-h-screen bg-paper paper-texture pb-24">
+    <main className="min-h-screen bg-paper paper-texture">
+      {/* ── HEADER NAV ── */}
+      <header style={{ background: "var(--forest-dark)", borderBottom: "1px solid rgba(245,197,24,0.15)" }}>
+        <div className="section-container h-14 flex items-center justify-between">
+          <Link
+            href="/"
+            className="flex items-center gap-2.5 group"
+            style={{ color: "rgba(253,251,247,0.7)" }}
+          >
+            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
+            <span className="font-mono text-[0.65rem] uppercase tracking-widest">Home</span>
+          </Link>
 
-      {/* ── Header ── */}
-      <header className="bg-deep-green border-b border-divider sticky top-0 z-40">
-        <div className="section-container">
-          <div className="h-14 flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2 group">
-              <ArrowLeft className="w-3.5 h-3.5 text-warm-cream group-hover:text-accent-gold transition-fast" />
-              <span className="section-label text-warm-cream group-hover:text-accent-gold transition-fast">
-                HACKER गोवा HOUSE
-              </span>
-            </Link>
-            <span className="section-label text-warm-cream">PASS APPLICATION FORM</span>
+          {/* Wordmark centre */}
+          <div className="wordmark-logo font-heading font-black uppercase tracking-tight">
+            <span style={{ color: "var(--yellow)", fontSize: "1.1rem" }}>HACKER</span>
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                background: "var(--pink)",
+                color: "#fff",
+                border: "2px solid #FF85CC",
+                borderRadius: "5px",
+                padding: "0.1em 0.22em",
+                fontSize: "0.9rem",
+                fontWeight: 900,
+                lineHeight: 1,
+                margin: "0 0.1em",
+              }}
+            >
+              गोवा
+            </span>
+            <span style={{ color: "var(--yellow)", fontSize: "1.1rem" }}>HOUSE</span>
           </div>
+
+          <span
+            className="font-mono text-[0.6rem] uppercase tracking-widest hidden sm:block"
+            style={{ color: "rgba(245,197,24,0.5)" }}
+          >
+            Builder Pass Studio
+          </span>
         </div>
       </header>
 
-      <div className="section-container pt-12 lg:pt-16">
+      {/* ── HERO BANNER ── */}
+      <section
+        style={{
+          background: "var(--forest)",
+          borderBottom: "1px solid rgba(245,197,24,0.12)",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        {/* Atmospheric glow */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "radial-gradient(ellipse 80% 60% at 30% 50%, rgba(26,128,64,0.3) 0%, transparent 60%)",
+            pointerEvents: "none",
+          }}
+        />
+        <div className="section-container relative py-12 lg:py-20">
+          <div className="max-w-3xl space-y-6">
+            <div className="flex items-center gap-3 flex-wrap">
+              <span
+                className="font-mono text-[0.6rem] uppercase tracking-widest px-3 py-1 rounded-sm"
+                style={{
+                  background: "var(--yellow)",
+                  color: "var(--forest-dark)",
+                  fontWeight: 700,
+                }}
+              >
+                Builder Pass Application
+              </span>
+              <span
+                className="font-mono text-[0.6rem] uppercase tracking-widest"
+                style={{ color: "rgba(245,197,24,0.5)" }}
+              >
+                2:47 pm Studio
+              </span>
+            </div>
 
-        {/* ── Page title ── */}
-        <div className="border-b border-divider pb-8 mb-12 grid lg:grid-cols-[2fr_1fr] gap-8 items-end">
-          <div>
-            <p className="section-label mb-3 text-muted-green">— APPLY FOR YOUR PASS</p>
-            <h1 className="font-heading font-black text-text-deep uppercase tracking-tight leading-none text-[clamp(2rem,6vw,3.5rem)]">
-              Builder Pass
-              <br />
-              <span className="text-deep-green">Application</span>
+            <h1
+              className="font-heading font-black uppercase tracking-tight leading-none"
+              style={{
+                color: "var(--yellow)",
+                fontSize: "clamp(2.2rem, 7vw, 4.5rem)",
+              }}
+            >
+              Apply for your{" "}
+              <span style={{ color: "var(--pink)" }}>GOA</span>{" "}
+              builder pass
             </h1>
+            <p
+              className="text-sm sm:text-base leading-relaxed max-w-xl"
+              style={{ color: "rgba(253,251,247,0.7)" }}
+            >
+              Less noise. More signal. Submit your photo, claim your pass, and carry a Builder Social Card made for Hacker House Goa.
+            </p>
           </div>
-          <p className="text-sm text-muted-green leading-relaxed">
-            Fill in your details accurately. Your photo will appear on the physical pass card.
-          </p>
         </div>
+      </section>
+
+      <div className="section-container pt-12 pb-24">
 
         {/* ── Error banner ── */}
         {submitError && (
@@ -345,7 +429,30 @@ export default function RegisterPage() {
 
           </div>
         </form>
+
+        <div className="mt-14 grid gap-8 lg:grid-cols-[1fr_0.9fr]">
+          <div className="rounded-none border border-divider bg-surface p-6">
+            <h2 className="font-heading text-xs uppercase tracking-[0.24em] text-muted-green mb-6">register flow</h2>
+            <div className="space-y-5">
+              {steps.map((step) => (
+                <div key={step.label} className="space-y-1">
+                  <p className="font-mono text-[0.72rem] lowercase tracking-[0.24em] text-deep-green">{step.label}</p>
+                  <p className="text-sm text-text-muted leading-relaxed">{step.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-none border border-divider bg-surface p-6">
+            <p className="font-heading text-sm font-black uppercase tracking-tight mb-3">Less Noise. More Signal.</p>
+            <p className="text-sm text-text-muted leading-relaxed">
+              Submit once. Get approved once. Carry your pass into every verification moment.
+            </p>
+          </div>
+        </div>
       </div>
+
+      <PageFooter />
     </main>
   );
 }

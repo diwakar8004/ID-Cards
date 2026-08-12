@@ -46,10 +46,19 @@ export function PassPreview({ user, verificationToken, onQrReady, onCardRef }: P
         />
       ) : (
         <div
-          className="bg-warm-cream rounded-[24px] flex items-center justify-center border border-divider shadow-lg"
-          style={{ width: "340px", height: "540px" }}
+          style={{
+            width: "340px",
+            height: "540px",
+            borderRadius: "24px",
+            background: "linear-gradient(175deg, #0A5C2E 0%, #073D1E 55%, #051F10 100%)",
+            border: "1.5px solid rgba(245,197,24,0.18)",
+            boxShadow: "0 20px 48px rgba(0,0,0,0.45)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
-          <Loader2 className="w-8 h-8 animate-spin text-deep-green" />
+          <Loader2 className="w-8 h-8 animate-spin" style={{ color: "#F5C518" }} />
         </div>
       )}
     </>

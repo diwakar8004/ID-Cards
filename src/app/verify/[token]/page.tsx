@@ -48,12 +48,12 @@ export default function VerifyPage({ params }: VerifyPageProps) {
   // ── LOADING ──
   if (loading) {
     return (
-      <main className="min-h-screen bg-paper paper-texture flex flex-col">
+      <main className="min-h-screen flex flex-col" style={{ background: "var(--forest)" }}>
         {/* Nav strip */}
-        <div className="border-b border-divider bg-deep-green">
+        <div style={{ background: "var(--forest-dark)", borderBottom: "1px solid rgba(245,197,24,0.15)" }}>
           <div className="section-container">
             <div className="h-14 flex items-center">
-              <Link href="/" className="section-label text-warm-cream hover:text-accent-gold transition-fast">
+              <Link href="/" className="font-mono text-[0.65rem] uppercase tracking-widest transition-fast" style={{ color: "rgba(245,197,24,0.6)" }}>
                 ← HOME
               </Link>
             </div>
@@ -61,8 +61,8 @@ export default function VerifyPage({ params }: VerifyPageProps) {
         </div>
 
         <div className="flex-1 flex flex-col items-center justify-center gap-4 p-8">
-          <Loader2 className="w-6 h-6 animate-spin text-accent-gold" />
-          <p className="section-label text-warm-cream">AUTHENTICATING SECURE TOKEN…</p>
+          <Loader2 className="w-6 h-6 animate-spin" style={{ color: "var(--yellow)" }} />
+          <p className="font-mono text-xs uppercase tracking-widest" style={{ color: "rgba(245,197,24,0.6)" }}>AUTHENTICATING SECURE TOKEN…</p>
         </div>
       </main>
     );
@@ -71,32 +71,32 @@ export default function VerifyPage({ params }: VerifyPageProps) {
   // ── NOT FOUND / ERROR ──
   if (error || !result) {
     return (
-      <main className="min-h-screen bg-paper paper-texture flex flex-col">
-        <div className="border-b border-divider bg-deep-green">
+      <main className="min-h-screen flex flex-col" style={{ background: "var(--forest)" }}>
+        <div style={{ background: "var(--forest-dark)", borderBottom: "1px solid rgba(245,197,24,0.15)" }}>
           <div className="section-container">
             <div className="h-14 flex items-center justify-between">
-              <Link href="/" className="section-label text-warm-cream hover:text-accent-gold transition-fast">
+              <Link href="/" className="font-mono text-[0.65rem] uppercase tracking-widest" style={{ color: "rgba(245,197,24,0.6)" }}>
                 ← HOME
               </Link>
-              <span className="section-label text-warm-cream">PASS VERIFICATION</span>
+              <span className="font-mono text-[0.65rem] uppercase tracking-widest" style={{ color: "rgba(245,197,24,0.4)" }}>PASS VERIFICATION</span>
             </div>
           </div>
         </div>
 
         <div className="section-container py-20">
           <div className="max-w-sm">
-            <p className="section-label mb-4 text-accent-red">— VERIFICATION RESULT</p>
+            <p className="font-mono text-xs uppercase tracking-widest mb-4" style={{ color: "var(--pink)" }}>— VERIFICATION RESULT</p>
             <h1
               className="font-heading font-black uppercase tracking-tight leading-none mb-4"
-              style={{ fontSize: "clamp(3rem, 10vw, 5rem)", color: "var(--accent-red)" }}
+              style={{ fontSize: "clamp(3rem, 10vw, 5rem)", color: "var(--pink)" }}
             >
               INVALID
               <br />PASS
             </h1>
-            <p className="text-sm text-muted-green leading-relaxed mb-8">
+            <p className="text-sm leading-relaxed mb-8" style={{ color: "rgba(253,251,247,0.6)" }}>
               {error || "This pass token could not be found or is not valid."}
             </p>
-            <Link href="/" className="btn-secondary">
+            <Link href="/" className="btn-festival">
               RETURN TO HOME
             </Link>
           </div>
@@ -128,16 +128,16 @@ export default function VerifyPage({ params }: VerifyPageProps) {
     : "var(--ink-secondary)";
 
   return (
-    <main className="min-h-screen bg-paper paper-texture flex flex-col">
+    <main className="min-h-screen flex flex-col" style={{ background: "var(--paper)" }}>
 
       {/* ── Top nav strip ── */}
-      <div className="border-b border-divider bg-deep-green">
+      <div style={{ background: "var(--forest-dark)", borderBottom: "1px solid rgba(245,197,24,0.15)" }}>
         <div className="section-container">
           <div className="h-14 flex items-center justify-between">
-            <Link href="/" className="section-label text-warm-cream hover:text-accent-gold transition-fast">
+            <Link href="/" className="font-mono text-[0.65rem] uppercase tracking-widest transition-fast" style={{ color: "rgba(245,197,24,0.6)" }}>
               ← HOME
             </Link>
-            <span className="section-label text-warm-cream">PASS VERIFICATION</span>
+            <span className="font-mono text-[0.65rem] uppercase tracking-widest" style={{ color: "rgba(245,197,24,0.4)" }}>PASS VERIFICATION</span>
           </div>
         </div>
       </div>

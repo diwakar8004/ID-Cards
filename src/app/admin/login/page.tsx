@@ -57,11 +57,11 @@ function AdminLoginForm() {
   return (
     <main className="min-h-screen bg-paper paper-texture flex flex-col">
       {/* Header strip */}
-      <div className="border-b border-divider bg-deep-green">
+      <div style={{ background: "var(--forest-dark)", borderBottom: "1px solid rgba(245,197,24,0.15)" }}>
         <div className="section-container">
           <div className="h-14 flex items-center justify-between">
-            <Link href="/" className="section-label text-warm-cream hover:text-accent-gold transition-fast">← HOME</Link>
-            <span className="section-label text-warm-cream">ADMIN GATEWAY</span>
+            <Link href="/" className="font-mono text-[0.65rem] uppercase tracking-widest transition-fast" style={{ color: "rgba(245,197,24,0.6)" }}>← HOME</Link>
+            <span className="font-mono text-[0.65rem] uppercase tracking-widest" style={{ color: "rgba(245,197,24,0.4)" }}>ADMIN GATEWAY</span>
           </div>
         </div>
       </div>
@@ -139,7 +139,7 @@ function AdminLoginForm() {
 
 export default function AdminLoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-paper flex items-center justify-center"><Loader2 className="w-6 h-6 animate-spin text-deep-green" /></div>}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center" style={{ background: "var(--forest)" }}><Loader2 className="w-6 h-6 animate-spin" style={{ color: "var(--yellow)" }} /></div>}>
       <AdminLoginForm />
     </Suspense>
   );

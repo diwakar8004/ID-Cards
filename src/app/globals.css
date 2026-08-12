@@ -74,75 +74,93 @@
 }
 
 :root {
-  /* === Unified Brand Palette (matching Builder Pass reference) === */
-  /* Warm cream paper background */
+  /* ====================================================================
+     HACKER गोवा HOUSE — Festival Brand Palette
+     Matches screenshots: deep forest green, yellow display type, hot pink
+     ==================================================================== */
+
+  /* Core brand greens */
+  --forest: #0A5C2E;            /* Deep forest green — primary hero bg */
+  --forest-dark: #073D1E;       /* Darker green for nav/sidebar */
+  --forest-mid: #0D6B34;        /* Mid-tone for panels */
+  --forest-light: #1A8040;      /* Lighter accent green */
+
+  /* Warm cream for form/content pages */
   --paper: #F5F1DF;
-  /* Deep forest green (primary — right panel, headers) */
-  --forest: #003F34;
-  /* Pink/coral accent */
-  --pink: #F5425D;
-  --accent-red: #F5425D;
-  /* Gold/yellow accent */
-  --yellow: #F7C744;
-  --accent-gold: #F7C744;
-  /* Deep green text */
-  --near-black: #003F34;
-  --ink: #003F34;
-  --ink-secondary: #5A6B6B;
-  /* Pass page editorial palette */
-  --deep-green: #0F2E2E;
-  --deep-green-dark: #0A2323;
-  --text-deep: #004638;
-  --text-muted-green: #5A6B6B;
   --warm-cream: #FDFBF7;
 
-  /* === shadcn variables mapped to unified brand === */
+  /* Yellow — headline & CTA colour */
+  --yellow: #F5C518;
+  --yellow-bright: #FFD700;
+  --accent-gold: #F5C518;
+
+  /* Pink — गोवा badge accent */
+  --pink: #E91E8C;
+  --accent-red: #E91E8C;
+
+  /* Text */
+  --near-black: #0A1A0F;
+  --ink: #0A1A0F;
+  --ink-on-green: #FDFBF7;      /* Text on green bg */
+  --ink-secondary: #5A8060;     /* Muted green-tinted secondary text */
+
+  /* Surface variants (for admin/form areas — keep cream) */
+  --surface: #EDE7CF;
+  --surface-raised: #D4CAB0;
+  --divider: #C8BC9A;
+
+  /* Deep green text (content areas) */
+  --deep-green: #0A5C2E;
+  --deep-green-dark: #073D1E;
+  --text-deep: #0A3D1E;
+  --text-muted-green: #5A7A60;
+
+  /* ====================================================================
+     shadcn variables mapped to brand
+     ==================================================================== */
   --background: #F5F1DF;
-  --foreground: #004638;
+  --foreground: #0A1A0F;
   --card: #EDE7CF;
-  --card-foreground: #003F34;
+  --card-foreground: #0A1A0F;
   --popover: #EDE7CF;
-  --popover-foreground: #003F34;
-  --primary: #003F34;
-  --primary-foreground: #F5F1DF;
+  --popover-foreground: #0A1A0F;
+  --primary: #0A5C2E;
+  --primary-foreground: #FDFBF7;
   --secondary: #E6DFCA;
-  --secondary-foreground: #003F34;
+  --secondary-foreground: #0A1A0F;
   --muted: #E6DFCA;
-  --muted-foreground: #5A6B6B;
+  --muted-foreground: #5A7A60;
   --accent: #E2F5ED;
-  --accent-foreground: #003F34;
-  --destructive: #F5425D;
-  --border: #D4CAB0;
-  --input: #D4CAB0;
-  --ring: #003F34;
+  --accent-foreground: #0A5C2E;
+  --destructive: #E91E8C;
+  --border: #C8BC9A;
+  --input: #C8BC9A;
+  --ring: #0A5C2E;
   --radius: 0.25rem;
 
-  /* Chart colors */
-  --chart-1: #003F34;
-  --chart-2: #F5425D;
-  --chart-3: #F7C744;
-  --chart-4: #5A6B6B;
-  --chart-5: #003F34;
+  /* Chart */
+  --chart-1: #0A5C2E;
+  --chart-2: #E91E8C;
+  --chart-3: #F5C518;
+  --chart-4: #5A7A60;
+  --chart-5: #073D1E;
 
   /* Sidebar */
-  --sidebar: #003F34;
-  --sidebar-foreground: #F5F1DF;
-  --sidebar-primary: #003F34;
-  --sidebar-primary-foreground: #F5F1DF;
-  --sidebar-accent: #0A2323;
-  --sidebar-accent-foreground: #F5F1DF;
-  --sidebar-border: #0A2323;
-  --sidebar-ring: #F5425D;
+  --sidebar: #073D1E;
+  --sidebar-foreground: #FDFBF7;
+  --sidebar-primary: #0A5C2E;
+  --sidebar-primary-foreground: #FDFBF7;
+  --sidebar-accent: #0A3D1E;
+  --sidebar-accent-foreground: #FDFBF7;
+  --sidebar-border: #073D1E;
+  --sidebar-ring: #F5C518;
 
-  /* === Design System Semantic Tokens === */
+  /* Design system semantic */
   --canvas: #F5F1DF;
-  --surface: #E6DFCA;
-  --surface-raised: #D4CAB0;
-  --divider: #D4CAB0;
-  --accent-navy: #003F34;
-  --accent-surface: #E2F5ED;
+  --accent-navy: #0A5C2E;
+  --accent-surface: #D6F0E0;
 
-  /* Status colors */
+  /* Status colours */
   --status-active: #1A6641;
   --status-active-bg: #D6EFE1;
   --status-expired: #A05C00;
@@ -186,7 +204,7 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-outfit), var(--font-geist-sans), system-ui, sans-serif;
     font-weight: 700;
-    line-height: 1.1;
+    line-height: 1.05;
     color: var(--near-black);
     letter-spacing: -0.01em;
   }
@@ -230,6 +248,7 @@
   /* ---- Color tokens ---- */
   .text-ink { color: var(--ink); }
   .text-ink-secondary { color: var(--ink-secondary); }
+  .text-ink-on-green { color: var(--ink-on-green); }
   .text-forest { color: var(--forest); }
   .text-pink { color: var(--pink); }
   .text-yellow { color: var(--yellow); }
@@ -245,6 +264,7 @@
 
   .bg-paper { background-color: var(--paper); }
   .bg-forest { background-color: var(--forest); }
+  .bg-forest-dark { background-color: var(--forest-dark); }
   .bg-pink { background-color: var(--pink); }
   .bg-yellow { background-color: var(--yellow); }
   .bg-canvas { background-color: var(--canvas); }
@@ -261,43 +281,80 @@
   .border-yellow { border-color: var(--yellow); }
   .border-divider { border-color: var(--divider); }
 
-  /* ---- Card base (minimal, functional) ---- */
-  .card-base {
-    background-color: var(--surface);
-    border: 1px solid var(--divider);
-    border-radius: 0;
+  /* ---- Hero / Festival Green Background ---- */
+  .hero-green-bg {
+    background-color: var(--forest);
+    background-image:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(26, 128, 64, 0.35) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 50% 100%, rgba(7, 61, 30, 0.6) 0%, transparent 70%);
   }
 
-  /* ---- Editorial rule ---- */
-  .rule {
-    display: block;
-    width: 100%;
-    height: 1px;
-    background-color: var(--divider);
+  .hero-green-bg-dark {
+    background-color: var(--forest-dark);
+    background-image:
+      radial-gradient(ellipse 90% 50% at 50% -10%, rgba(10, 92, 46, 0.5) 0%, transparent 60%);
   }
 
-  /* ---- Section label style ---- */
-  .section-label {
-    font-family: var(--font-geist-mono), monospace;
-    font-size: 0.6875rem;
-    font-weight: 500;
-    letter-spacing: 0.12em;
+  /* ---- गोवा Badge (hot pink, outlined box) ---- */
+  .goa-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--pink);
+    color: #FFFFFF;
+    border: 2.5px solid #FF69B4;
+    border-radius: 6px;
+    font-family: var(--font-outfit), system-ui, sans-serif;
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    line-height: 1;
+    padding: 0.15em 0.3em;
+    position: relative;
+    top: 0.05em;
+  }
+
+  /* ---- Yellow dotted CTA button (matches screenshot 1 APPLY button) ---- */
+  .btn-festival {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background-color: var(--yellow);
+    color: var(--forest-dark);
+    border: 2px dashed var(--forest-dark);
+    font-family: var(--font-geist-sans), system-ui, sans-serif;
+    font-weight: 800;
+    font-size: 0.9375rem;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--ink-secondary);
+    padding: 0.7rem 1.75rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 140ms ease;
+    text-decoration: none;
+  }
+  .btn-festival:hover {
+    background-color: #FFD700;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(245, 197, 24, 0.4);
+  }
+  .btn-festival:active {
+    transform: translateY(0);
   }
 
-  /* ---- Primary CTA button ---- */
+  /* ---- Primary CTA button (solid yellow, square) ---- */
   .btn-primary {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    background-color: var(--accent-gold);
-    color: var(--deep-green);
-    border: 1.5px solid var(--deep-green);
+    background-color: var(--yellow);
+    color: var(--forest-dark);
+    border: 2px solid var(--forest-dark);
     font-family: var(--font-geist-sans), system-ui, sans-serif;
-    font-weight: 700;
+    font-weight: 800;
     font-size: 0.9375rem;
-    letter-spacing: 0.01em;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     padding: 0.8rem 1.75rem;
     border-radius: 0;
     cursor: pointer;
@@ -305,7 +362,7 @@
     text-decoration: none;
   }
   .btn-primary:hover {
-    background-color: #efd662;
+    background-color: #FFD700;
     transform: translateY(-1px);
   }
   .btn-primary:active {
@@ -318,11 +375,13 @@
     align-items: center;
     gap: 0.5rem;
     background-color: transparent;
-    color: var(--deep-green);
-    border: 1.5px solid var(--deep-green);
+    color: var(--warm-cream);
+    border: 1.5px solid rgba(253, 251, 247, 0.35);
     font-family: var(--font-geist-sans), system-ui, sans-serif;
     font-weight: 600;
     font-size: 0.9375rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     padding: 0.75rem 1.5rem;
     border-radius: 0;
     cursor: pointer;
@@ -330,9 +389,9 @@
     text-decoration: none;
   }
   .btn-secondary:hover {
-    background-color: var(--warm-cream);
-    border-color: var(--accent-red);
-    color: var(--accent-red);
+    background-color: rgba(253, 251, 247, 0.08);
+    border-color: var(--yellow);
+    color: var(--yellow);
   }
 
   /* ---- Tactile press ---- */
@@ -387,6 +446,31 @@
     background-color: var(--status-rejected-bg);
   }
 
+  /* ---- Card base ---- */
+  .card-base {
+    background-color: var(--surface);
+    border: 1px solid var(--divider);
+    border-radius: 0;
+  }
+
+  /* ---- Editorial rule ---- */
+  .rule {
+    display: block;
+    width: 100%;
+    height: 1px;
+    background-color: var(--divider);
+  }
+
+  /* ---- Section label style ---- */
+  .section-label {
+    font-family: var(--font-geist-mono), monospace;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-secondary);
+  }
+
   /* ---- Section container ---- */
   .section-container {
     width: min(100%, 1200px);
@@ -397,6 +481,77 @@
     padding-right: 1rem;
   }
 
+  /* ---- Wordmark logo ---- */
+  .wordmark-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: nowrap;
+  }
+
+  /* ---- गोवा pill (legacy, used in some places) ---- */
+  .wordmark-pink {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.15em 0.3em;
+    color: #FFFFFF;
+    background: var(--pink);
+    border: 2px solid #FF69B4;
+    border-radius: 5px;
+    font-family: var(--font-outfit), system-ui, sans-serif;
+    font-size: 0.85em;
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    line-height: 1;
+    position: relative;
+    top: 0.02em;
+    margin: 0 0.08em;
+  }
+
+  .page-credit-line {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.75rem;
+    font-family: var(--font-geist-mono);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-secondary);
+  }
+
+  .footer-trees {
+    background-image: radial-gradient(circle, rgba(10, 92, 46, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  /* ---- Tropical sun SVG decoration ---- */
+  .sunrise-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 50% 110%, rgba(245, 197, 24, 0.22) 0%, rgba(245, 197, 24, 0.04) 35%, transparent 55%),
+      radial-gradient(ellipse 120% 60% at 50% 100%, rgba(7, 61, 30, 0.5) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .hero-panel {
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ---- Tropical rays effect (sun at bottom) ---- */
+  .hero-sun-rays {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
   @media (min-width: 640px) {
     .section-container {
       padding-left: 1.5rem;
@@ -405,14 +560,16 @@
   }
 
   .btn-primary,
-  .btn-secondary {
+  .btn-secondary,
+  .btn-festival {
     justify-content: center;
     text-align: center;
   }
 
   @media (max-width: 639px) {
     .btn-primary,
-    .btn-secondary {
+    .btn-secondary,
+    .btn-festival {
       width: 100%;
     }
   }
@@ -444,6 +601,31 @@
   .card-interactive:hover {
     transform: translateY(-2px);
   }
+
+  /* ---- Nav ghost link (on green bg) ---- */
+  .nav-link-ghost {
+    font-family: var(--font-geist-sans), system-ui, sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(253, 251, 247, 0.8);
+    text-decoration: none;
+    transition: color 120ms ease;
+  }
+  .nav-link-ghost:hover {
+    color: var(--yellow);
+  }
+
+  /* ---- Footer nav link (dim on green, hover yellow) ---- */
+  .footer-nav-link {
+    color: rgba(253, 251, 247, 0.4);
+    text-decoration: none;
+    transition: color 120ms ease;
+  }
+  .footer-nav-link:hover {
+    color: var(--yellow);
+  }
 }
 
 /* ============================================================
@@ -465,12 +647,29 @@
   to   { opacity: 1; }
 }
 
+@keyframes sun-rise {
+  from { transform: translateX(-50%) translateY(12px); opacity: 0; }
+  to   { transform: translateX(-50%) translateY(0); opacity: 1; }
+}
+
+@keyframes ray-spread {
+  from { opacity: 0; transform: scaleX(0.6); }
+  to   { opacity: 1; transform: scaleX(1); }
+}
+
 /* ---- Animation classes ---- */
 .animate-fade-in-up {
   animation: fade-in-up 320ms cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
 .animate-fade-in {
   animation: fade-in 240ms ease both;
+}
+.animate-sun-rise {
+  animation: sun-rise 600ms cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+.animate-ray-spread {
+  animation: ray-spread 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  animation-delay: 200ms;
 }
 
 /* ---- Stagger delays ---- */
@@ -517,6 +716,37 @@
    ============================================================ */
 
 .paper-texture {
-  background-image: radial-gradient(circle, rgba(15, 46, 46, 0.06) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(10, 92, 46, 0.05) 1px, transparent 1px);
   background-size: 20px 20px;
+}
+
+/* ============================================================
+   HERO DISPLAY TITLE — massive, festival-grade typography
+   ============================================================ */
+
+.hero-display-title {
+  font-family: var(--font-outfit), system-ui, sans-serif;
+  font-weight: 900;
+  font-size: clamp(3.5rem, 11vw, 9rem);
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: var(--yellow);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.12em;
+}
+
+/* ============================================================
+   FESTIVAL STEP CARDS
+   ============================================================ */
+
+.festival-step {
+  border-top: 2px solid rgba(245, 197, 24, 0.3);
+  padding: 1.5rem 0;
+  transition: border-color 180ms ease;
+}
+.festival-step:hover {
+  border-top-color: var(--yellow);
 }
