@@ -4,17 +4,33 @@ import { useEffect, useState, use } from "react";
 import { UserStatus } from "@/types";
 import { formatDateISO } from "@/lib/utils";
 import Link from "next/link";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 interface VerifyPageProps {
   params: Promise<{ token: string }>;
 }
 
+interface VerifyResult {
+  status: UserStatus;
+  user: {
+    fullName: string;
+    photoUrl: string;
+    uniqueId: string | null;
+    organizationName: string;
+    organizationType: string;
+    department: string;
+    designation: string;
+    issueDate: Date | null;
+    expiryDate: Date | null;
+    status: UserStatus;
+  };
+  verifiedAt: string;
+}
+
 export default function VerifyPage({ params }: VerifyPageProps) {
   const { token } = use(params);
-
   const [loading, setLoading] = useState(true);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<VerifyResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -29,53 +45,55 @@ export default function VerifyPage({ params }: VerifyPageProps) {
       .finally(() => setLoading(false));
   }, [token]);
 
-  // ── LOADING ────────────────────────────────────────────────
+  // ── LOADING ──
   if (loading) {
     return (
       <main className="min-h-screen bg-paper paper-texture flex flex-col">
         {/* Nav strip */}
-        <div className="border-b border-divider bg-paper">
+        <div className="border-b border-divider bg-deep-green">
           <div className="section-container">
             <div className="h-14 flex items-center">
-              <span className="section-label">PASS VERIFICATION / HACKER गोवा HOUSE</span>
+              <Link href="/" className="section-label text-warm-cream hover:text-accent-gold transition-fast">
+                ← HOME
+              </Link>
             </div>
           </div>
         </div>
 
         <div className="flex-1 flex flex-col items-center justify-center gap-4 p-8">
-          <Loader2 className="w-6 h-6 animate-spin text-forest" />
-          <p className="section-label">AUTHENTICATING SECURE TOKEN…</p>
+          <Loader2 className="w-6 h-6 animate-spin text-accent-gold" />
+          <p className="section-label text-warm-cream">AUTHENTICATING SECURE TOKEN…</p>
         </div>
       </main>
     );
   }
 
-  // ── NOT FOUND / ERROR ──────────────────────────────────────
+  // ── NOT FOUND / ERROR ──
   if (error || !result) {
     return (
       <main className="min-h-screen bg-paper paper-texture flex flex-col">
-        <div className="border-b border-divider bg-paper">
+        <div className="border-b border-divider bg-deep-green">
           <div className="section-container">
             <div className="h-14 flex items-center justify-between">
-              <span className="section-label">PASS VERIFICATION</span>
-              <Link href="/" className="section-label hover:text-forest transition-fast flex items-center gap-1.5">
-                <ArrowLeft className="w-3 h-3" /> HOME
+              <Link href="/" className="section-label text-warm-cream hover:text-accent-gold transition-fast">
+                ← HOME
               </Link>
+              <span className="section-label text-warm-cream">PASS VERIFICATION</span>
             </div>
           </div>
         </div>
 
         <div className="section-container py-20">
           <div className="max-w-sm">
-            <p className="section-label mb-4" style={{ color: "var(--pink)" }}>— VERIFICATION RESULT</p>
+            <p className="section-label mb-4 text-accent-red">— VERIFICATION RESULT</p>
             <h1
               className="font-heading font-black uppercase tracking-tight leading-none mb-4"
-              style={{ fontSize: "clamp(3rem, 10vw, 5rem)", color: "var(--pink)" }}
+              style={{ fontSize: "clamp(3rem, 10vw, 5rem)", color: "var(--accent-red)" }}
             >
               INVALID
               <br />PASS
             </h1>
-            <p className="text-sm text-ink-secondary leading-relaxed mb-8">
+            <p className="text-sm text-muted-green leading-relaxed mb-8">
               {error || "This pass token could not be found or is not valid."}
             </p>
             <Link href="/" className="btn-secondary">
@@ -104,7 +122,7 @@ export default function VerifyPage({ params }: VerifyPageProps) {
   const statusColor = isActive
     ? "var(--status-active)"
     : isRevoked
-    ? "var(--pink)"
+    ? "var(--accent-red)"
     : isExpired
     ? "var(--status-expired)"
     : "var(--ink-secondary)";
@@ -113,13 +131,13 @@ export default function VerifyPage({ params }: VerifyPageProps) {
     <main className="min-h-screen bg-paper paper-texture flex flex-col">
 
       {/* ── Top nav strip ── */}
-      <div className="border-b border-divider bg-paper">
+      <div className="border-b border-divider bg-deep-green">
         <div className="section-container">
           <div className="h-14 flex items-center justify-between">
-            <span className="section-label">PASS VERIFICATION / HACKER गोवा HOUSE</span>
-            <Link href="/" className="section-label hover:text-forest transition-fast flex items-center gap-1.5">
-              <ArrowLeft className="w-3 h-3" /> HOME
+            <Link href="/" className="section-label text-warm-cream hover:text-accent-gold transition-fast">
+              ← HOME
             </Link>
+            <span className="section-label text-warm-cream">PASS VERIFICATION</span>
           </div>
         </div>
       </div>
@@ -140,7 +158,7 @@ export default function VerifyPage({ params }: VerifyPageProps) {
           >
             {statusLabel}
           </h1>
-          <p className="font-heading font-bold text-xl uppercase tracking-widest text-near-black mb-10">
+          <p className="font-heading font-bold text-xl uppercase tracking-widest text-text-deep mb-10">
             BUILDER PASS
           </p>
 
@@ -160,21 +178,20 @@ export default function VerifyPage({ params }: VerifyPageProps) {
                 className="w-full h-full object-cover"
               />
             </div>
-
             {/* Details */}
             <div className="flex-1 min-w-0">
-              <h2 className="font-heading text-2xl font-bold text-near-black leading-tight mb-1 truncate">
+              <h2 className="font-heading text-2xl font-bold text-text-deep leading-tight mb-1 truncate">
                 {user.fullName}
               </h2>
-              <p className="section-label mb-1">{user.designation}</p>
+              <p className="section-label text-muted-green mb-1">{user.designation}</p>
               {user.organizationName !== "HACKER गोवा HOUSE" && (
-                <p className="text-sm text-ink-secondary truncate">{user.organizationName}</p>
+                <p className="text-sm text-muted-green truncate">{user.organizationName}</p>
               )}
             </div>
           </div>
 
           {/* Metadata table */}
-          <div className="border border-divider divide-y divide-divider">
+          <div className="border border-divider divide-y divide-divider bg-warm-cream">
             {[
               { label: "PASS ID", value: user.uniqueId || "PENDING", mono: true },
               { label: "AFFILIATION", value: "HACKER गोवा HOUSE" },
@@ -183,10 +200,10 @@ export default function VerifyPage({ params }: VerifyPageProps) {
               { label: "VERIFIED AT", value: new Date(verifiedAt).toLocaleString("en-IN") },
             ].map(row => (
               <div key={row.label} className="flex items-center justify-between px-4 py-3 gap-4">
-                <span className="section-label shrink-0">{row.label}</span>
+                <span className="section-label text-muted-green shrink-0">{row.label}</span>
                 <span
                   className={`text-sm font-medium text-right truncate ${row.mono ? "font-mono" : ""}`}
-                  style={{ color: "var(--near-black)" }}
+                  style={{ color: "var(--text-deep)" }}
                 >
                   {row.value}
                 </span>
@@ -194,7 +211,7 @@ export default function VerifyPage({ params }: VerifyPageProps) {
             ))}
           </div>
 
-          <p className="section-label mt-8 text-center">
+          <p className="section-label mt-8 text-muted-green">
             SECURED BY HACKER गोवा HOUSE
           </p>
         </div>

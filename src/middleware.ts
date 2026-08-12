@@ -60,7 +60,8 @@ export function middleware(request: NextRequest): NextResponse {
 
 export const config = {
   matcher: [
-    // Match all admin routes
+    // Match all admin routes — including API routes
     "/admin/:path*",
+    "/api/admin/:path*",
   ],
 };

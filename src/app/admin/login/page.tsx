@@ -21,7 +21,7 @@ function AdminLoginForm() {
   // Extract URL params for redirecting back
   const from = searchParams.get("from") || "/admin";
   const reason = searchParams.get("reason");
-
+  
   const {
     register,
     handleSubmit,
@@ -50,18 +50,18 @@ function AdminLoginForm() {
       router.push(from);
       router.refresh(); // Refresh to update middleware state
     } catch (err) {
-      setError("An unexpected error occurred. Please try again.");
+      setError(`An unexpected error occurred. Please try again. ${err instanceof Error ? err.message : ""}`);
     }
   };
-
+  
   return (
     <main className="min-h-screen bg-paper paper-texture flex flex-col">
       {/* Header strip */}
-      <div className="border-b border-divider bg-paper">
+      <div className="border-b border-divider bg-deep-green">
         <div className="section-container">
           <div className="h-14 flex items-center justify-between">
-            <Link href="/" className="section-label hover:text-forest transition-fast">← HOME</Link>
-            <span className="section-label">ADMIN GATEWAY</span>
+            <Link href="/" className="section-label text-warm-cream hover:text-accent-gold transition-fast">← HOME</Link>
+            <span className="section-label text-warm-cream">ADMIN GATEWAY</span>
           </div>
         </div>
       </div>
@@ -78,14 +78,14 @@ function AdminLoginForm() {
           )}
 
           {error && (
-            <div className="mb-6 p-3 border flex items-start gap-3" style={{ borderColor: "var(--pink)", backgroundColor: "var(--status-revoked-bg)" }}>
-              <p className="text-sm font-medium" style={{ color: "var(--pink)" }}>{error}</p>
+            <div className="mb-6 p-3 border flex items-start gap-3" style={{ borderColor: "var(--accent-red)", backgroundColor: "var(--status-revoked-bg)" }}>
+              <p className="text-sm font-medium" style={{ color: "var(--accent-red)" }}>{error}</p>
             </div>
           )}
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 mt-8">
               <div>
-                <label className="section-label block mb-1.5">EMAIL ADDRESS</label>
+                <label className="section-label block mb-1.5 text-muted-green">EMAIL ADDRESS</label>
                 <input
                   id="email"
                   type="email"
@@ -96,14 +96,14 @@ function AdminLoginForm() {
                   autoComplete="email"
                 />
                 {errors.email && (
-                  <p className="text-xs mt-1 font-medium" style={{ color: "var(--pink)" }}>
+                  <p className="text-xs mt-1 font-medium text-accent-red">
                     {errors.email.message}
                   </p>
                 )}
               </div>
 
               <div>
-                <label className="section-label block mb-1.5">PASSWORD</label>
+                <label className="section-label block mb-1.5 text-muted-green">PASSWORD</label>
                 <input
                   id="password"
                   type="password"
@@ -113,7 +113,7 @@ function AdminLoginForm() {
                   autoComplete="current-password"
                 />
                 {errors.password && (
-                  <p className="text-xs mt-1 font-medium" style={{ color: "var(--pink)" }}>
+                  <p className="text-xs mt-1 font-medium text-accent-red">
                     {errors.password.message}
                   </p>
                 )}
@@ -139,7 +139,7 @@ function AdminLoginForm() {
 
 export default function AdminLoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-paper flex items-center justify-center"><Loader2 className="w-6 h-6 animate-spin text-forest" /></div>}>
+    <Suspense fallback={<div className="min-h-screen bg-paper flex items-center justify-center"><Loader2 className="w-6 h-6 animate-spin text-deep-green" /></div>}>
       <AdminLoginForm />
     </Suspense>
   );

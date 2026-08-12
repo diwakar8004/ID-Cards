@@ -1,6 +1,6 @@
-import { Users, Clock, CheckCircle, XCircle, UserCheck } from "lucide-react";
+import { Users, Clock, CheckCircle, XCircle } from "lucide-react";
 import connectToDatabase from "@/lib/mongodb";
-import User from "@/models/User";
+import User, { IUserDocument } from "@/models/User";
 import { UserStatus } from "@/types";
 
 export const dynamic = "force-dynamic";
@@ -96,7 +96,7 @@ export default async function AdminDashboardPage() {
                   </td>
                 </tr>
               ) : (
-                recentUsers.map((user: any) => (
+                recentUsers.map((user: IUserDocument) => (
                   <tr key={user._id.toString()} className="hover:bg-canvas transition-fast">
                     <td className="px-6 py-4 font-medium text-ink">{user.fullName}</td>
                     <td className="px-6 py-4 text-ink-secondary">{user.designation}</td>

@@ -28,11 +28,11 @@ function FormField({
 }) {
   return (
     <div className="space-y-1.5">
-      <label className="section-label block">{label}</label>
+      <label className="section-label block text-muted-green">{label}</label>
       {children}
-      {note && <p className="text-xs text-ink-secondary mt-1">{note}</p>}
+      {note && <p className="text-xs text-muted-green mt-1">{note}</p>}
       {error && (
-        <p className="text-xs font-medium mt-1" style={{ color: "var(--pink)" }}>
+        <p className="text-xs font-medium mt-1 text-accent-red">
           {error}
         </p>
       )}
@@ -115,16 +115,16 @@ export default function RegisterPage() {
     <main className="min-h-screen bg-paper paper-texture pb-24">
 
       {/* ── Header ── */}
-      <header className="bg-paper border-b border-divider sticky top-0 z-40">
+      <header className="bg-deep-green border-b border-divider sticky top-0 z-40">
         <div className="section-container">
           <div className="h-14 flex items-center justify-between">
             <Link href="/" className="flex items-center gap-2 group">
-              <ArrowLeft className="w-3.5 h-3.5 text-ink-secondary group-hover:text-forest transition-fast" />
-              <span className="section-label group-hover:text-forest transition-fast">
+              <ArrowLeft className="w-3.5 h-3.5 text-warm-cream group-hover:text-accent-gold transition-fast" />
+              <span className="section-label text-warm-cream group-hover:text-accent-gold transition-fast">
                 HACKER गोवा HOUSE
               </span>
             </Link>
-            <span className="section-label">PASS APPLICATION FORM</span>
+            <span className="section-label text-warm-cream">PASS APPLICATION FORM</span>
           </div>
         </div>
       </header>
@@ -134,14 +134,14 @@ export default function RegisterPage() {
         {/* ── Page title ── */}
         <div className="border-b border-divider pb-8 mb-12 grid lg:grid-cols-[2fr_1fr] gap-8 items-end">
           <div>
-            <p className="section-label mb-3">— APPLY FOR YOUR PASS</p>
-            <h1 className="font-heading font-black text-near-black uppercase tracking-tight leading-none text-[clamp(2rem,6vw,3.5rem)]">
+            <p className="section-label mb-3 text-muted-green">— APPLY FOR YOUR PASS</p>
+            <h1 className="font-heading font-black text-text-deep uppercase tracking-tight leading-none text-[clamp(2rem,6vw,3.5rem)]">
               Builder Pass
               <br />
-              <span className="text-forest">Application</span>
+              <span className="text-deep-green">Application</span>
             </h1>
           </div>
-          <p className="text-sm text-ink-secondary leading-relaxed">
+          <p className="text-sm text-muted-green leading-relaxed">
             Fill in your details accurately. Your photo will appear on the physical pass card.
           </p>
         </div>
@@ -150,10 +150,10 @@ export default function RegisterPage() {
         {submitError && (
           <div
             className="mb-10 p-4 border flex items-start gap-3 animate-fade-in"
-            style={{ borderColor: "var(--pink)", backgroundColor: "var(--status-revoked-bg)" }}
+            style={{ borderColor: "var(--accent-red)", backgroundColor: "var(--status-revoked-bg)" }}
           >
-            <span className="font-mono text-xs mt-0.5" style={{ color: "var(--pink)" }}>ERR</span>
-            <p className="text-sm font-medium" style={{ color: "var(--pink)" }}>{submitError}</p>
+            <span className="font-mono text-xs mt-0.5 text-accent-red">ERR</span>
+            <p className="text-sm font-medium text-accent-red">{submitError}</p>
           </div>
         )}
 
@@ -163,9 +163,9 @@ export default function RegisterPage() {
             {/* ── 01 PHOTO ── */}
             <div>
               <div className="flex items-center gap-4 mb-8">
-                <span className="font-mono text-xs text-ink-secondary">01</span>
+                <span className="font-mono text-xs text-muted-green">01</span>
                 <span className="rule flex-1" />
-                <span className="section-label">YOUR PHOTO</span>
+                <span className="section-label text-muted-green">YOUR PHOTO</span>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-8 items-start">
@@ -174,14 +174,14 @@ export default function RegisterPage() {
                   onClick={() => fileInputRef.current?.click()}
                   className="relative flex-shrink-0 w-32 h-36 border-2 border-dashed overflow-hidden transition-base group"
                   style={{
-                    borderColor: photoError ? "var(--pink)" : "var(--divider)",
+                    borderColor: photoError ? "var(--accent-red)" : "var(--divider)",
                     backgroundColor: "var(--surface)",
                   }}
                 >
                   {photoPreview ? (
                     <Image src={photoPreview} alt="Preview" fill className="object-cover" />
                   ) : (
-                    <div className="flex flex-col items-center justify-center h-full text-ink-secondary group-hover:text-forest transition-fast gap-2">
+                    <div className="flex flex-col items-center justify-center h-full text-muted-green group-hover:text-deep-green transition-fast gap-2">
                       <UploadCloud className="w-6 h-6" />
                       <span className="section-label">UPLOAD</span>
                     </div>
@@ -196,25 +196,24 @@ export default function RegisterPage() {
                 />
 
                 <div className="flex-1 space-y-3">
-                  <p className="text-sm text-ink-secondary leading-relaxed">
+                  <p className="text-sm text-muted-green leading-relaxed">
                     This photo appears on your official Builder Pass card. Use a clear,
                     front-facing photo with a plain or neutral background.
                   </p>
                   <ul className="space-y-1">
                     {["JPG, PNG, or WEBP", "Max 5MB", "Plain background preferred"].map(t => (
-                      <li key={t} className="flex gap-2 text-xs text-ink-secondary">
-                        <span className="text-forest">—</span>{t}
+                      <li key={t} className="flex gap-2 text-xs text-muted-green">
+                        <span className="text-deep-green">—</span>{t}
                       </li>
                     ))}
                   </ul>
                   {photoError && (
-                    <p className="text-xs font-medium" style={{ color: "var(--pink)" }}>{photoError}</p>
+                    <p className="text-xs font-medium text-accent-red">{photoError}</p>
                   )}
                   {photoPreview && (
                     <button
                       type="button"
-                      className="section-label hover:text-pink transition-fast mt-2"
-                      style={{ color: "var(--ink-secondary)" }}
+                      className="section-label hover:text-accent-red transition-fast mt-2"
                       onClick={() => {
                         setPhoto(null);
                         setPhotoPreview(null);
@@ -231,9 +230,9 @@ export default function RegisterPage() {
             {/* ── 02 IDENTITY ── */}
             <div>
               <div className="flex items-center gap-4 mb-8">
-                <span className="font-mono text-xs text-ink-secondary">02</span>
+                <span className="font-mono text-xs text-muted-green">02</span>
                 <span className="rule flex-1" />
-                <span className="section-label">YOUR IDENTITY</span>
+                <span className="section-label text-muted-green">YOUR IDENTITY</span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-8">
@@ -286,9 +285,9 @@ export default function RegisterPage() {
             {/* ── 03 BUILDER PROFILE ── */}
             <div>
               <div className="flex items-center gap-4 mb-8">
-                <span className="font-mono text-xs text-ink-secondary">03</span>
+                <span className="font-mono text-xs text-muted-green">03</span>
                 <span className="rule flex-1" />
-                <span className="section-label">YOUR BUILDER PROFILE</span>
+                <span className="section-label text-muted-green">YOUR BUILDER PROFILE</span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-8">

@@ -42,15 +42,15 @@ export const IDCard = forwardRef<HTMLDivElement, IDCardProps>(
     return (
       <div
         ref={ref}
-        className={`relative overflow-hidden bg-white ${className}`}
+        className={`relative overflow-hidden ${className}`}
         style={{
           width: `${width}px`,
           height: `${height}px`,
-          boxShadow: "0 4px 24px rgba(0, 0, 0, 0.08)",
-          borderRadius: "16px",
+          boxShadow: "0 10px 30px rgba(0, 0, 0, 0.10)",
+          borderRadius: "24px",
           fontFamily: "var(--font-geist-sans), sans-serif",
           transform: "translateZ(0)",
-          backgroundColor: "#FFFFFF",
+          backgroundColor: "#F8F8F8",
         }}
       >
         {/* Background pattern */}
@@ -58,7 +58,7 @@ export const IDCard = forwardRef<HTMLDivElement, IDCardProps>(
           className="absolute inset-0 opacity-10 pointer-events-none"
           style={{
             backgroundImage:
-              "radial-gradient(circle at 100% 0%, #1E40AF 0%, transparent 50%), radial-gradient(circle at 0% 100%, #1E40AF 0%, transparent 50%)",
+              "radial-gradient(circle at 100% 0%, #003F34 0%, transparent 50%), radial-gradient(circle at 0% 100%, #003F34 0%, transparent 50%)",
           }}
         />
 

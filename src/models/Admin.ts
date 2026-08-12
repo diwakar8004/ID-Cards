@@ -37,11 +37,12 @@ const AdminSchema = new Schema<IAdminDocument>(
   {
     timestamps: true,
     toJSON: {
-      transform: (_doc, ret: any) => {
+      transform: (_doc, ret: { [key: string]: unknown }) => {
         // NEVER expose passwordHash in API responses
         delete ret.passwordHash;
         delete ret.__v;
-        ret.id = ret._id.toString();
+        const id = ret._id as { toString(): string } | undefined;
+        ret.id = id?.toString();
         return ret;
       },
     },
@@ -49,7 +50,9 @@ const AdminSchema = new Schema<IAdminDocument>(
 );
 
 // --- Indexes ---
-AdminSchema.index({ email: 1 });
+// NOTE: email index is created by `unique: true` on the schema field above;
+// no redundant AdminSchema.index({ email: 1 }) needed.
+
 
 // Prevent model recompilation in Next.js hot reload
 const Admin: Model<IAdminDocument> =

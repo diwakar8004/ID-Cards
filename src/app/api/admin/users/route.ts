@@ -2,9 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
 import User from "@/models/User";
 import { sanitizeMongoQuery } from "@/lib/utils";
+import { getSession } from "@/lib/auth";
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
+    const session = await getSession();
+    if (!session) {
+      return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    }
+
+    await connectToDatabase();
+
     const searchParams = request.nextUrl.searchParams;
     
     // Parse filters
@@ -14,11 +22,9 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get("search");
     
     const skip = (page - 1) * pageSize;
-
-    await connectToDatabase();
-
+    
     // Build query
-    const query: any = {};
+    const query: Record<string, unknown> = {};
     
     if (status && status !== "ALL") {
       query.status = sanitizeMongoQuery(status);
@@ -32,7 +38,7 @@ export async function GET(request: NextRequest) {
         { uniqueId: { $regex: sanitizedSearch, $options: "i" } },
       ];
     }
-
+    
     // Execute query
     const [users, total] = await Promise.all([
       User.find(query)
@@ -42,7 +48,7 @@ export async function GET(request: NextRequest) {
         .lean(),
       User.countDocuments(query)
     ]);
-
+    
     return NextResponse.json({
       success: true,
       data: {

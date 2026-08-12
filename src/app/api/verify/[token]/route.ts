@@ -82,8 +82,8 @@ export async function GET(
         result: VerificationResult.ERROR,
         status: "INVALID"
       });
-    } catch (e) {
-      // ignore nested error
+    } catch {
+      // ignore nested error — already logged above
     }
 
     return NextResponse.json(

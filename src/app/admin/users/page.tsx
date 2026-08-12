@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { 
   MoreHorizontal, 
   Search, 
@@ -11,6 +11,7 @@ import {
   Filter
 } from "lucide-react";
 import { UserStatus } from "@/types";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,16 +40,32 @@ import {
 import { getStatusBadgeClass, getStatusLabel } from "@/lib/utils";
 import { IDCardExport } from "@/components/IDCardExport";
 
+interface AdminUser {
+  _id: string;
+  fullName: string;
+  email: string;
+  photoUrl: string;
+  uniqueId: string | null;
+  designation: string;
+  department: string;
+  organizationName: string;
+  organizationType: string;
+  issueDate: string | null;
+  expiryDate: string | null;
+  status: string;
+  verificationToken: string;
+}
+
 export default function AdminUsersPage() {
-  const [users, setUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [selectedUser, setSelectedUser] = useState<any | null>(null);
+  const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams({
@@ -70,7 +87,7 @@ export default function AdminUsersPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, search, statusFilter]);
 
   useEffect(() => {
     // Debounce search
@@ -78,7 +95,7 @@ export default function AdminUsersPage() {
       fetchUsers();
     }, 300);
     return () => clearTimeout(timer);
-  }, [search, statusFilter, page]);
+  }, [page, search, statusFilter, fetchUsers]);
 
   const handleAction = async (userId: string, action: "approve" | "reject" | "revoke") => {
     try {
@@ -91,25 +108,30 @@ export default function AdminUsersPage() {
       } else {
         alert(json.error || `Failed to ${action} user`);
       }
-    } catch (error) {
+    } catch {
       alert(`An error occurred while trying to ${action} the user.`);
     }
   };
 
   return (
     <div className="space-y-6 animate-fade-in-up">
-      <div>
-        <h1 className="font-heading text-2xl font-bold text-ink mb-1">User Management</h1>
-        <p className="text-sm text-ink-secondary">Review, approve, and manage Builder Passes.</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="font-heading text-2xl font-bold text-text-deep mb-1">User Management</h1>
+          <p className="text-sm text-muted-green">Review, approve, and manage Builder Passes.</p>
+        </div>
+        <Link href="/admin" className="section-label text-muted-green hover:text-accent-red transition-fast">
+          ← BACK TO DASHBOARD
+        </Link>
       </div>
 
       {/* Toolbar */}
       <div className="flex flex-col sm:flex-row gap-4 justify-between items-center bg-surface p-4 rounded-xl border border-divider shadow-sm">
         <div className="relative w-full sm:max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-secondary" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-green" />
           <Input 
             placeholder="Search by name, email, or ID..." 
-            className="pl-9 h-10 w-full"
+            className="pl-9 h-10 w-full border-divider focus:border-deep-green focus:ring-deep-green"
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
@@ -119,7 +141,7 @@ export default function AdminUsersPage() {
         </div>
         
         <div className="w-full sm:w-auto flex items-center gap-3">
-          <Filter className="w-4 h-4 text-ink-secondary" />
+          <Filter className="w-4 h-4 text-muted-green" />
           <Select 
             value={statusFilter} 
             onValueChange={(val) => {
@@ -127,7 +149,7 @@ export default function AdminUsersPage() {
               setPage(1);
             }}
           >
-            <SelectTrigger className="w-[180px] h-10">
+            <SelectTrigger className="w-[180px] h-10 border-divider focus:border-deep-green">
               <SelectValue placeholder="Filter Status" />
             </SelectTrigger>
             <SelectContent>
@@ -141,10 +163,10 @@ export default function AdminUsersPage() {
       </div>
 
       {/* Table */}
-      <div className="card-base overflow-hidden">
+      <div className="bg-warm-cream rounded-xl border border-divider overflow-hidden">
         <div className="overflow-x-auto min-h-[400px]">
           <table className="w-full text-sm text-left relative">
-            <thead className="bg-surface-raised text-xs text-ink-secondary uppercase font-semibold tracking-wider sticky top-0 z-10">
+            <thead className="bg-deep-green text-xs text-warm-cream uppercase font-semibold tracking-wider sticky top-0 z-10">
               <tr>
                 <th className="px-6 py-4">Applicant</th>
                 <th className="px-6 py-4">Role / Dept</th>
@@ -157,18 +179,18 @@ export default function AdminUsersPage() {
               {loading ? (
                 <tr>
                   <td colSpan={5} className="px-6 py-12 text-center">
-                    <Loader2 className="w-6 h-6 animate-spin text-accent-navy mx-auto" />
+                    <Loader2 className="w-6 h-6 animate-spin text-deep-green mx-auto" />
                   </td>
                 </tr>
               ) : users.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-ink-secondary">
+                  <td colSpan={5} className="px-6 py-12 text-center text-muted-green">
                     No users found matching your criteria.
                   </td>
                 </tr>
               ) : (
                 users.map((user) => (
-                  <tr key={user._id} className="hover:bg-canvas transition-fast">
+                  <tr key={user._id} className="hover:bg-surface transition-fast">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         {user.photoUrl ? (
@@ -178,61 +200,62 @@ export default function AdminUsersPage() {
                           <div className="w-10 h-10 rounded-full bg-surface-raised border border-divider" />
                         )}
                         <div>
-                          <p className="font-medium text-ink">{user.fullName}</p>
-                          <p className="text-xs text-ink-secondary">{user.email}</p>
+                          <p className="font-medium text-text-deep">{user.fullName}</p>
+                          <p className="text-xs text-muted-green">{user.email}</p>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <p className="text-ink font-medium">{user.designation}</p>
-                      <p className="text-xs text-ink-secondary">{user.department}</p>
+                      <p className="text-text-deep font-medium">{user.designation}</p>
+                      <p className="text-xs text-muted-green">{user.department}</p>
                     </td>
                     <td className="px-6 py-4">
                       {user.uniqueId ? (
-                        <span className="font-mono text-xs bg-surface-raised px-2 py-1 rounded border border-divider">
+                        <span className="font-mono text-xs bg-surface-raised px-2 py-1 rounded border border-divider text-text-deep">
                           {user.uniqueId}
                         </span>
                       ) : (
-                        <span className="text-xs text-ink-secondary">—</span>
+                        <span className="text-xs text-muted-green">—</span>
                       )}
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`px-2.5 py-1 text-xs font-semibold rounded-full ${getStatusBadgeClass(user.status)}`}>
+                      <span className={`px-2.5 py-1 text-xs font-semibold rounded-full ${getStatusBadgeClass(user.status as UserStatus)}`}>
                         {getStatusLabel(user.status)}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
                       <DropdownMenu>
-                        <DropdownMenuTrigger className="p-2 hover:bg-surface-raised rounded-md text-ink-secondary">
+                        <DropdownMenuTrigger className="p-2 hover:bg-surface-raised rounded-md text-muted-green">
                           <span className="sr-only">Open menu</span>
                           <MoreHorizontal className="h-4 w-4" />
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-[160px]">
+                        <DropdownMenuContent align="end" className="bg-warm-cream border-divider">
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                          <DropdownMenuSeparator />
+                          <DropdownMenuSeparator className="bg-divider" />
                           
                           {user.status === UserStatus.PENDING && (
                             <>
-                              <DropdownMenuItem onClick={() => handleAction(user._id, "approve")}>
-                                <CheckCircle className="mr-2 w-4 h-4 text-status-active" />
+                              <DropdownMenuItem onClick={() => handleAction(user._id, "approve")} className="focus:bg-surface focus:text-status-active">
+                                <CheckCircle className="mr-2 w-4 h-4" />
                                 Approve
                               </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleAction(user._id, "reject")}>
-                                <XCircle className="mr-2 w-4 h-4 text-status-rejected" />
+                              <DropdownMenuItem onClick={() => handleAction(user._id, "reject")} className="focus:bg-surface focus:text-status-rejected">
+                                <XCircle className="mr-2 w-4 h-4" />
                                 Reject
                               </DropdownMenuItem>
                             </>
-                          )}
+                            )
+                          }
 
                           {user.status === UserStatus.ACTIVE && (
-                            <DropdownMenuItem onClick={() => handleAction(user._id, "revoke")}>
-                              <ShieldBan className="mr-2 w-4 h-4 text-status-revoked" />
+                            <DropdownMenuItem onClick={() => handleAction(user._id, "revoke")} className="focus:bg-surface focus:text-status-revoked">
+                              <ShieldBan className="mr-2 w-4 h-4" />
                               Revoke Pass
                             </DropdownMenuItem>
                           )}
                           
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem onClick={() => setSelectedUser(user)}>
+                          <DropdownMenuSeparator className="bg-divider" />
+                          <DropdownMenuItem onClick={() => setSelectedUser(user)} className="focus:bg-surface">
                             View Details / ID Card
                           </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -248,23 +271,25 @@ export default function AdminUsersPage() {
         {/* Pagination */}
         {totalPages > 1 && (
           <div className="p-4 border-t border-divider flex items-center justify-between bg-surface">
-            <span className="text-sm text-ink-secondary">
+            <span className="text-sm text-muted-green">
               Page {page} of {totalPages}
             </span>
             <div className="flex gap-2">
               <Button 
                 variant="outline" 
-                size="sm" 
+                size="sm"
                 onClick={() => setPage(p => Math.max(1, p - 1))}
                 disabled={page === 1}
+                className="border-divider text-text-deep hover:bg-warm-cream"
               >
                 Previous
               </Button>
               <Button 
                 variant="outline" 
-                size="sm" 
+                size="sm"
                 onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                 disabled={page === totalPages}
+                className="border-divider text-text-deep hover:bg-warm-cream"
               >
                 Next
               </Button>
@@ -275,19 +300,29 @@ export default function AdminUsersPage() {
 
       {/* ID Card / User Details Modal */}
       <Dialog open={!!selectedUser} onOpenChange={(open) => !open && setSelectedUser(null)}>
-        <DialogContent className="max-w-md bg-canvas">
+        <DialogContent className="max-w-md bg-warm-cream border-divider">
           <DialogHeader>
-            <DialogTitle className="font-heading">Builder Social Card</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="font-heading text-text-deep">Builder Social Card</DialogTitle>
+            <DialogDescription className="text-muted-green">
               View and export the official ID card for this user.
             </DialogDescription>
           </DialogHeader>
           
           <div className="flex justify-center py-4">
             {selectedUser && (
-              <IDCardExport 
-                user={selectedUser} 
-                verificationToken={selectedUser.verificationToken || "PENDING"} 
+              <IDCardExport
+                user={{
+                  fullName: selectedUser.fullName,
+                  photoUrl: selectedUser.photoUrl,
+                  uniqueId: selectedUser.uniqueId ?? "",
+                  designation: selectedUser.designation,
+                  department: selectedUser.department,
+                  organizationName: selectedUser.organizationName,
+                  issueDate: selectedUser.issueDate,
+                  expiryDate: selectedUser.expiryDate,
+                  status: selectedUser.status as UserStatus,
+                }}
+                verificationToken={selectedUser.verificationToken || "PENDING"}
               />
             )}
           </div>

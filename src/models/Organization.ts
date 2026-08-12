@@ -96,9 +96,10 @@ const OrganizationSchema = new Schema<IOrganizationDocument>(
   {
     timestamps: true,
     toJSON: {
-      transform: (_doc, ret: any) => {
+      transform: (_doc, ret: { [key: string]: unknown }) => {
         delete ret.__v;
-        ret.id = ret._id.toString();
+        const id = ret._id as { toString(): string } | undefined;
+        ret.id = id?.toString();
         return ret;
       },
     },

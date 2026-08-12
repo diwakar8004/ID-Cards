@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import { Shield, LayoutDashboard, Users, Settings, LogOut, ChevronRight, Menu } from "lucide-react";
+import { Shield, LayoutDashboard, Users, Settings, LogOut, ChevronRight } from "lucide-react";
 
 import {
   Sidebar,
@@ -45,19 +45,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-surface-raised">
-        <Sidebar className="border-r border-divider bg-sidebar">
+      <div className="flex min-h-screen w-full bg-warm-cream">
+        <Sidebar className="border-r border-divider bg-deep-green">
           <SidebarHeader className="p-4 border-b border-divider">
             <Link href="/admin" className="flex items-center gap-2.5 px-2">
-              <Shield className="w-5 h-5 text-accent-navy" />
-              <span className="font-heading font-bold text-ink text-sm uppercase">
+              <Shield className="w-5 h-5 text-accent-gold" />
+              <span className="font-heading font-bold text-warm-cream text-sm uppercase">
                 HACKER गोवा HOUSE
               </span>
             </Link>
           </SidebarHeader>
           <SidebarContent>
             <SidebarGroup>
-              <SidebarGroupLabel className="text-ink-secondary text-xs font-semibold px-4 pt-4 pb-2 uppercase tracking-wider">
+              <SidebarGroupLabel className="text-warm-cream/50 text-xs font-semibold px-4 pt-4 pb-2 uppercase tracking-wider">
                 Management
               </SidebarGroupLabel>
               <SidebarGroupContent>
@@ -67,7 +67,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                       <Link href={item.url} className="block w-full">
                         <SidebarMenuButton 
                           isActive={pathname === item.url}
-                          className={`text-sm ${pathname === item.url ? 'text-accent-navy font-semibold bg-accent-surface' : 'text-ink-secondary hover:text-ink hover:bg-surface-raised'}`}
+                          className={`text-sm ${pathname === item.url ? 'text-warm-cream font-semibold bg-deep-green-dark' : 'text-warm-cream/70 hover:text-warm-cream hover:bg-deep-green-dark'}`}
                         >
                           <item.icon className="w-4 h-4 mr-2" />
                           <span>{item.title}</span>
@@ -82,7 +82,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <SidebarFooter className="p-4 border-t border-divider">
             <Button 
               variant="ghost" 
-              className="w-full justify-start text-status-revoked hover:text-status-revoked hover:bg-status-revoked-bg"
+              className="w-full justify-start text-accent-red hover:text-accent-red hover:bg-status-revoked-bg"
               onClick={handleLogout}
               disabled={isLoggingOut}
             >
@@ -93,12 +93,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </Sidebar>
         
         <main className="flex-1 flex flex-col min-h-screen overflow-x-hidden relative">
-          <header className="h-16 border-b border-divider bg-surface flex items-center px-6 sticky top-0 z-30 shrink-0">
+          <header className="h-16 border-b border-divider bg-warm-cream flex items-center px-6 sticky top-0 z-30 shrink-0">
             <SidebarTrigger className="mr-4 lg:hidden" />
-            <div className="flex items-center text-sm text-ink-secondary">
-              <span className="font-medium text-ink">Admin</span>
+            <div className="flex items-center text-sm text-text-deep">
+              <span className="font-medium text-text-deep">Admin</span>
               <ChevronRight className="w-4 h-4 mx-2" />
-              <span className="capitalize">{pathname === "/admin" ? "Dashboard" : pathname.split('/').pop()}</span>
+              <span className="capitalize text-muted-green">{pathname === "/admin" ? "Dashboard" : pathname.split('/').pop()}</span>
             </div>
           </header>
           <div className="p-6 md:p-8 flex-1 overflow-y-auto">

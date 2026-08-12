@@ -96,7 +96,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     // 8. Generate uniqueId, dates, and secure verification token
-    const uniqueId = await (User as any).generateUniqueId("PASS");
+    const uniqueId = await (User as unknown as { generateUniqueId: (prefix: string) => Promise<string> }).generateUniqueId("PASS");
     const issueDate = new Date();
     const expiryDate = calculateExpiryDate(issueDate, 365);
     const verificationToken = crypto.randomBytes(32).toString("hex");

@@ -2,9 +2,17 @@ import { NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
 import User from "@/models/User";
 import { UserStatus } from "@/types";
+import { getSession } from "@/lib/auth";
+import { ApiResponse } from "@/types";
 
-export async function GET() {
+export async function GET(): Promise<NextResponse<ApiResponse>> {
   try {
+    // Require authentication
+    const session = await getSession();
+    if (!session) {
+      return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    }
+
     await connectToDatabase();
 
     const [

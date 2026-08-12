@@ -121,9 +121,10 @@ const UserSchema = new Schema<IUserDocument>(
   {
     timestamps: true,
     toJSON: {
-      transform: (_doc, ret: any) => {
+      transform: (_doc, ret: { [key: string]: unknown }) => {
         delete ret.__v;
-        ret.id = ret._id.toString();
+        const id = ret._id as { toString(): string } | undefined;
+        ret.id = id?.toString();
         // Remove virtuals and passwords if any existed
         return ret;
       },
@@ -132,9 +133,11 @@ const UserSchema = new Schema<IUserDocument>(
 );
 
 // --- Indexes ---
-UserSchema.index({ uniqueId: 1 });
-UserSchema.index({ verificationToken: 1 });
-UserSchema.index({ email: 1 });
+// NOTE: uniqueId, verificationToken, and email each have `unique: true` (and
+// sparse for uniqueId) on their schema field definitions, which auto-creates
+// the unique index. Explicit .index() calls here would duplicate those indexes
+// and trigger Mongoose "Duplicate schema index" warnings, so they are omitted.
+// The remaining indexes below have no field-level equivalent.
 UserSchema.index({ status: 1 });
 UserSchema.index({ organizationName: 1 });
 UserSchema.index({ createdAt: -1 });

@@ -93,7 +93,7 @@ export function IDCardExport({ user, verificationToken }: IDCardExportProps) {
           />
         ) : (
           <div
-            className="bg-white rounded-2xl flex items-center justify-center border border-divider shadow-sm"
+            className="bg-warm-cream rounded-[24px] flex items-center justify-center border border-divider shadow-lg"
             style={{ width: "340px", height: "540px" }}
           >
             <Loader2 className="w-8 h-8 animate-spin text-accent-navy" />
