@@ -196,11 +196,16 @@ export function DownloadActions({ user, cardRef, ready }: DownloadActionsProps) 
   const generateCardBlob = async (): Promise<Blob | null> => {
     if (!cardRef.current) return null;
     await new Promise((resolve) => setTimeout(resolve, 100));
-    return await toBlob(cardRef.current, {
+    const blob = await toBlob(cardRef.current, {
       quality: 1.0,
       pixelRatio: 3,
       cacheBust: true,
     });
+    // Fallback: if blob has no proper MIME type, force image/png
+    if (blob && blob.type === "application/octet-stream") {
+      return new Blob([blob], { type: "image/png" });
+    }
+    return blob;
   };
 
   const handleSharePlatform = async (platform: "linkedin" | "x" | "whatsapp") => {
@@ -224,12 +229,13 @@ export function DownloadActions({ user, cardRef, ready }: DownloadActionsProps) 
       const text = `Check out my official Hacker House Goa 2026 Builder Pass! 🌴⚡`;
 
       // 4. Try Native Web Share API first (mobile + supported desktop browsers)
-      const nativeShareAvailable =
+      // Always attempt navigator.share() with files — canShare is only a hint
+      // and may return false on browsers that actually support file sharing.
+      if (
         typeof navigator !== "undefined" &&
         typeof navigator.share === "function" &&
-        (!navigator.canShare || navigator.canShare({ files: [file] }));
-
-      if (nativeShareAvailable) {
+        (!navigator.canShare || navigator.canShare({ files: [file] }))
+      ) {
         try {
           await navigator.share({
             title: "My Hacker House Goa Builder Pass",
@@ -237,7 +243,7 @@ export function DownloadActions({ user, cardRef, ready }: DownloadActionsProps) 
             url: shareUrl,
             files: [file],
           });
-          // Native share succeeded — no need for fallback
+          // Native share succeeded — image passed directly into the share sheet
           triggerToast("Pass shared successfully!");
           return;
         } catch (shareErr) {
@@ -249,7 +255,7 @@ export function DownloadActions({ user, cardRef, ready }: DownloadActionsProps) 
         }
       }
 
-      // 5. Clipboard Fallback (desktop browsers often block direct file passing)
+      // 5. Clipboard Fallback (desktop browsers often block native file sharing)
       let copiedToClipboard = false;
       if (
         typeof navigator !== "undefined" &&
@@ -263,6 +269,19 @@ export function DownloadActions({ user, cardRef, ready }: DownloadActionsProps) 
           copiedToClipboard = true;
         } catch (clipErr) {
           console.warn("Failed to copy image to clipboard:", clipErr);
+          // Fallback: try writing as a data URL string
+          try {
+            const dataUrl = await toPng(cardRef.current, {
+              quality: 1.0,
+              pixelRatio: 2,
+              cacheBust: true,
+            });
+            await navigator.clipboard.writeText(dataUrl);
+            copiedToClipboard = true;
+            console.info("Image copied as data URL as fallback");
+          } catch (fallbackErr) {
+            console.warn("Failed fallback clipboard copy:", fallbackErr);
+          }
         }
       }
 
