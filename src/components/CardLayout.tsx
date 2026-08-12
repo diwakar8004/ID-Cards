@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { PassPreview, DownloadActions } from "@/components/PassPreview";
@@ -24,11 +24,11 @@ interface CardData {
 function TinyPalm() {
   return (
     <svg viewBox="0 0 40 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style={{ width: "40px", height: "60px", opacity: 0.18 }}>
-      <path d="M18 60 Q17 42 16 30 Q14 18 12 8" stroke="#0A5C2E" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
-      <path d="M12 8 Q4 2 0 -2" stroke="#1A8040" strokeWidth="2" strokeLinecap="round" fill="none"/>
-      <path d="M12 8 Q10 0 13 -4" stroke="#1A8040" strokeWidth="2" strokeLinecap="round" fill="none"/>
-      <path d="M12 8 Q20 2 26 4" stroke="#1A8040" strokeWidth="2" strokeLinecap="round" fill="none"/>
-      <path d="M12 8 Q20 10 28 14" stroke="#1A8040" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+      <path d="M18 60 Q17 42 16 30 Q14 18 12 8" stroke="#0A5C2E" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+      <path d="M12 8 Q4 2 0 -2" stroke="#1A8040" strokeWidth="2" strokeLinecap="round" fill="none" />
+      <path d="M12 8 Q10 0 13 -4" stroke="#1A8040" strokeWidth="2" strokeLinecap="round" fill="none" />
+      <path d="M12 8 Q20 2 26 4" stroke="#1A8040" strokeWidth="2" strokeLinecap="round" fill="none" />
+      <path d="M12 8 Q20 10 28 14" stroke="#1A8040" strokeWidth="1.5" strokeLinecap="round" fill="none" />
     </svg>
   );
 }
@@ -46,7 +46,7 @@ function LeftPanel() {
         className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage: "radial-gradient(circle, rgba(10,92,46,0.06) 1px, transparent 1px)",
-          backgroundSize:  "20px 20px",
+          backgroundSize: "20px 20px",
         }}
       />
 
@@ -77,7 +77,7 @@ function LeftPanel() {
           className="font-heading font-black uppercase tracking-tight leading-[0.85] mb-8"
           style={{
             fontSize: "clamp(2.8rem, 7vw, 5.5rem)",
-            color:    "var(--forest)",
+            color: "var(--forest)",
           }}
         >
           YOUR
@@ -99,7 +99,7 @@ function LeftPanel() {
         </p>
 
         {/* Divider */}
-        <div style={{ height:"1px", background:"var(--divider)", marginBottom:"28px" }} />
+        <div style={{ height: "1px", background: "var(--divider)", marginBottom: "28px" }} />
 
         {/* Event identity */}
         <div className="space-y-2">
@@ -113,7 +113,7 @@ function LeftPanel() {
             className="font-heading font-black uppercase tracking-tight leading-none"
             style={{
               fontSize: "clamp(1.5rem, 3.5vw, 2rem)",
-              color:    "var(--forest)",
+              color: "var(--forest)",
             }}
           >
             BUILD.{" "}
@@ -136,18 +136,18 @@ function LeftPanel() {
             </span>
             <span
               style={{
-                display:         "inline-flex",
-                alignItems:      "center",
-                justifyContent:  "center",
-                background:      "var(--pink)",
-                color:           "#fff",
-                border:          "2px solid #FF85CC",
-                borderRadius:    "5px",
-                padding:         "1px 7px",
-                fontSize:        "0.8rem",
-                fontWeight:      900,
-                lineHeight:      1.3,
-                fontFamily:      "var(--font-outfit), system-ui, sans-serif",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                background: "var(--pink)",
+                color: "#fff",
+                border: "2px solid #FF85CC",
+                borderRadius: "5px",
+                padding: "1px 7px",
+                fontSize: "0.8rem",
+                fontWeight: 900,
+                lineHeight: 1.3,
+                fontFamily: "var(--font-outfit), system-ui, sans-serif",
               }}
             >
               गोवा
@@ -183,51 +183,79 @@ function LeftPanel() {
 // ─── Right pass preview panel ────────────────────────────────────────────────
 function RightPanel({ user }: { user: CardData }) {
   const [cardRef, setCardRef] = useState<React.RefObject<HTMLDivElement | null> | null>(null);
-  const [qrReady, setQrReady]   = useState(false);
+  const [qrReady, setQrReady] = useState(false);
+  // Responsive card scale: shrink the visual card to fit the viewport
+  // while the actual DOM node stays 340×540 px for crisp PNG export.
+  const [cardScale, setCardScale] = useState(1);
+
+  const computeScale = useCallback(() => {
+    const availH = window.innerHeight;
+    const availW = window.innerWidth / 2; // right half of split layout
+    const CARD_H = 540;
+    const CARD_W = 340;
+    // Reserve space: header (122px) + buttons (~60px) + verify block (~80px) + margins (80px)
+    const reservedH = 342;
+    const reservedW = 80;
+    const scaleH = (availH - reservedH) / CARD_H;
+    const scaleW = (availW - reservedW) / CARD_W;
+    setCardScale(Math.min(1, scaleH, scaleW));
+  }, []);
+
+  useEffect(() => {
+    computeScale();
+    window.addEventListener("resize", computeScale);
+    return () => window.removeEventListener("resize", computeScale);
+  }, [computeScale]);
 
   return (
     <div
-      className="h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden"
-      style={{ background: "linear-gradient(175deg, #073D1E 0%, #051F10 100%)" }}
+      className="h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden select-none"
+      style={{
+        backgroundImage:    "url('/images/right_panel_bg.png')",
+        backgroundSize:     "cover",
+        backgroundPosition: "center top",
+      }}
     >
-      {/* Tropical dot-grid bg */}
+      {/* Subtle dark overlay so UI elements stay readable over illustration */}
       <div
         aria-hidden="true"
         className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage: "radial-gradient(circle, rgba(245,197,24,0.05) 1px, transparent 1px)",
-          backgroundSize:  "22px 22px",
+          background: "linear-gradient(180deg, rgba(3, 28, 14, 0.30) 0%, rgba(3, 28, 14, 0.55) 100%)",
         }}
       />
 
-      {/* Radial amber glow behind card */}
-      <div
-        aria-hidden="true"
-        className="absolute pointer-events-none"
+      {/* ── REAL PHYSICAL PASS CONTAINER ── */}
+      <div className="relative z-10 mb-6"
         style={{
-          top:       "50%",
-          left:      "50%",
-          width:     "420px",
-          height:    "420px",
-          transform: "translate(-50%, -50%)",
-          borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(245,197,24,0.08) 0%, transparent 65%)",
+          // Scale the visual representation without affecting the DOM element size
+          // so html-to-image still captures the full 340×540 px canvas
+          transform:     `scale(${cardScale})`,
+          transformOrigin: "center center",
+          // Compensate layout space so siblings aren't pushed by original size
+          marginTop:    `${(540 * (cardScale - 1)) / 2}px`,
+          marginBottom: `${(540 * (cardScale - 1)) / 2}px`,
         }}
-      />
-
-      {/* Card */}
-      <div className="flex justify-center mb-8 relative z-10">
-        <PassPreview
-          user={user as IDCardProps["user"]}
-          verificationToken={user.verificationToken}
-          onQrReady={() => setQrReady(true)}
-          onCardRef={setCardRef}
-        />
+      >
+        {/* Subtle 3-D floating tilt */}
+        <div
+          style={{
+            transform:  "perspective(1200px) rotateY(-2deg) rotateX(2deg)",
+            transition: "transform 0.3s ease",
+          }}
+        >
+          <PassPreview
+            user={user as IDCardProps["user"]}
+            verificationToken={user.verificationToken}
+            onQrReady={() => setQrReady(true)}
+            onCardRef={setCardRef}
+          />
+        </div>
       </div>
 
       {/* Download buttons */}
       {cardRef && (
-        <div className="flex items-center justify-center gap-4 mb-6 relative z-10">
+        <div className="flex items-center justify-center gap-4 mb-6 relative z-20">
           <DownloadActions
             user={user as IDCardProps["user"]}
             cardRef={cardRef}
@@ -237,37 +265,38 @@ function RightPanel({ user }: { user: CardData }) {
       )}
 
       {/* Verify block */}
-      <div className="w-full max-w-[390px] relative z-10">
+      <div className="w-full max-w-[390px] relative z-20">
         <div
-          className="rounded-xl p-4"
+          className="rounded-2xl p-4"
           style={{
-            background:  "rgba(7,61,30,0.6)",
-            border:      "1px solid rgba(245,197,24,0.18)",
-            backdropFilter: "blur(8px)",
+            background:     "rgba(3, 31, 16, 0.75)",
+            border:         "1px solid rgba(245, 197, 24, 0.3)",
+            backdropFilter: "blur(12px)",
+            boxShadow:      "0 8px 32px rgba(0, 0, 0, 0.4)",
           }}
         >
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div>
               <p
                 className="font-mono text-[0.6rem] uppercase tracking-widest mb-1"
-                style={{ color: "rgba(245,197,24,0.5)" }}
+                style={{ color: "rgba(245, 197, 24, 0.6)" }}
               >
                 VERIFY THIS PASS
               </p>
               <p
                 className="font-mono text-xs break-all"
-                style={{ color: "rgba(253,251,247,0.45)" }}
+                style={{ color: "rgba(253, 251, 247, 0.6)" }}
               >
                 /verify/{user.uniqueId}
               </p>
             </div>
             <Link
               href={`/verify/${user.verificationToken}`}
-              className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider flex-shrink-0 px-4 py-2 rounded-lg transition-all"
+              className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider flex-shrink-0 px-4 py-2 rounded-xl transition-all"
               style={{
-                background: "rgba(245,197,24,0.12)",
-                border:     "1px solid rgba(245,197,24,0.3)",
-                color:      "#F5C518",
+                background: "linear-gradient(135deg, #F5C518 0%, #E6A800 100%)",
+                color:      "#031F10",
+                boxShadow:  "0 4px 12px rgba(245, 197, 24, 0.35)",
               }}
             >
               OPEN VERIFY PAGE
