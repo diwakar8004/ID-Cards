@@ -43,7 +43,7 @@ export async function PATCH(
 
     // Set dates and status
     user.issueDate = new Date();
-    user.expiryDate = calculateExpiryDate(user.issueDate, validityDays);
+    user.expiryDate = new Date("2026-10-31T23:59:59.999Z");
     user.status = UserStatus.ACTIVE;
 
     await user.save();

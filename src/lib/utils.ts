@@ -50,12 +50,15 @@ export function formatDateISO(date: Date | string | null | undefined): string {
  * Calculate expiry date from issue date + validity days.
  */
 export function calculateExpiryDate(
-  issueDate: Date,
-  validityDays: number
+  issueDate?: Date,
+  validityDays?: number
 ): Date {
-  const expiry = new Date(issueDate);
-  expiry.setDate(expiry.getDate() + validityDays);
-  return expiry;
+  if (validityDays) {
+    const expiry = new Date(issueDate || new Date());
+    expiry.setDate(expiry.getDate() + validityDays);
+    return expiry;
+  }
+  return new Date("2026-10-31T23:59:59.999Z");
 }
 
 /**
